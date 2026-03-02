@@ -27,52 +27,37 @@ export default async function GovernmentPage({ params }: Props) {
         </h1>
         <p className="text-lg text-gray-medium mb-10">{t.government.intro}</p>
 
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.incotermsTitle}</h2>
-          <ul className="space-y-2 text-gray-medium text-sm">
-            <li>{t.government.incotermsEXW}</li>
-            <li>{t.government.incotermsFCA}</li>
-            <li>{t.government.incotermsFOB}</li>
-          </ul>
-          <p className="mt-3 text-gray-medium text-sm italic">{t.government.incotermsNote}</p>
-        </section>
+        <div className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8">
+          <section>
+            <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.documentsAvailable}</h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-medium">
+              {t.government.documents.map((doc) => (
+                <li key={doc}>{doc}</li>
+              ))}
+            </ul>
+          </section>
 
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.paymentTermsTitle}</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-medium">
-            {t.government.paymentTermsBullets.map((bullet, i) => (
-              <li key={i}>{bullet}</li>
-            ))}
-          </ul>
-          <p className="mt-4 text-gray-medium text-sm">{t.government.paymentTermsFootnote}</p>
-        </section>
+          <section className="pt-6 mt-6 border-t border-gray-light">
+            <h2 className="text-xl font-semibold text-brand-black mb-4">{t.home.industriesServed}</h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-medium">
+              {t.government.industries.map((ind) => (
+                <li key={ind}>{ind}</li>
+              ))}
+            </ul>
+          </section>
 
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.documentsAvailable}</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-medium">
-            {t.government.documents.map((doc) => (
-              <li key={doc}>{doc}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.home.industriesServed}</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-medium">
-            {t.government.industries.map((ind) => (
-              <li key={ind}>{ind}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.tenderContact}</h2>
-          <p className="text-gray-medium">
-            <a href="mailto:tender@grinextrade.com" className="text-primary hover:text-accent-red hover:underline font-medium">
-              tender@grinextrade.com
-            </a>
-          </p>
-        </section>
+          <section className="pt-6 mt-6 border-t border-gray-light">
+            <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.tenderContact}</h2>
+            <p className="text-gray-medium">
+              <a
+                href="mailto:tender@grinextrade.com"
+                className="text-primary hover:text-accent-red hover:underline font-medium"
+              >
+                tender@grinextrade.com
+              </a>
+            </p>
+          </section>
+        </div>
       </div>
     </div>
   );
