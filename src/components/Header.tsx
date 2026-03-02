@@ -146,8 +146,8 @@ export function Header({ locale, translations }: Props) {
       <div className={`bg-white border-b transition-all duration-200 ${scrolled ? 'shadow-md bg-white/95 backdrop-blur-sm border-gray-light' : 'border-gray-light shadow-sm'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-18">
-            <Link href={base} className="text-xl font-bold text-primary hover:text-accent-red transition shrink-0">
-              <span className="block max-w-[220px] truncate">{translations.footer.company}</span>
+            <Link href={base} className="text-xl font-bold text-primary hover:text-accent-red transition shrink-0 min-w-0">
+              <span className="block max-w-[200px] sm:max-w-[260px] break-words">{translations.footer.company}</span>
             </Link>
 
             <nav className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2">

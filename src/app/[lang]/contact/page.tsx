@@ -87,7 +87,7 @@ export default async function ContactPage({ params }: Props) {
         </h1>
         <p className="text-white/90 mb-8 drop-shadow-md">{t.contact.subtitle}</p>
 
-        <div className="flex flex-wrap gap-4 mb-8">
+        <div className="flex flex-wrap gap-4 mb-8 justify-center">
           <a
             href={`mailto:${EMAIL}`}
             className="inline-flex items-center justify-center w-12 h-12 bg-white text-brand-black font-medium rounded-xl hover:bg-gray-light shadow-lg transition"

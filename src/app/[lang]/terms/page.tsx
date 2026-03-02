@@ -28,6 +28,8 @@ export default async function TermsPage({ params }: Props) {
         <div className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
           <p className="text-gray-medium">{t.terms.p1}</p>
           <p className="text-gray-medium">{t.terms.p2}</p>
+          {t.terms.p3 && <p className="text-gray-medium">{t.terms.p3}</p>}
+          {t.terms.p4 && <p className="text-gray-medium">{t.terms.p4}</p>}
         </div>
       </div>
     </div>

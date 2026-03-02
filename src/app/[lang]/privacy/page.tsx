@@ -28,6 +28,8 @@ export default async function PrivacyPage({ params }: Props) {
         <div className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
           <p className="text-gray-medium">{t.privacy.p1}</p>
           <p className="text-gray-medium">{t.privacy.p2}</p>
+          {t.privacy.p3 && <p className="text-gray-medium">{t.privacy.p3}</p>}
+          {t.privacy.p4 && <p className="text-gray-medium">{t.privacy.p4}</p>}
         </div>
       </div>
     </div>
