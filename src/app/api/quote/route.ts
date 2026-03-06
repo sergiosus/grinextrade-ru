@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-const RECIPIENT = 'info@grinextrade.com';
+const RECIPIENT = 'info@grinextrade.ru';
 const SUBJECT = 'New Quote Request — GrinexTrade';
 
 type QuoteBody = {

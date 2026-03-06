@@ -5,7 +5,7 @@ import { ContactForm } from '@/components/ContactForm';
 
 const WHATSAPP_URL = 'https://wa.me/79124475419';
 const TELEGRAM_URL = 'https://t.me/grinextrade';
-const EMAIL = 'info@grinextrade.com';
+const EMAIL = 'info@grinextrade.ru';
 
 const EMAIL_ICON = (
   <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -118,8 +118,8 @@ export default async function ContactPage({ params }: Props) {
           </a>
         </div>
 
-        <div className="bg-white/95 backdrop-blur rounded-xl p-6 md:p-8 pt-8 md:pt-10 shadow-lg scroll-mt-24" id="contact-form">
-          <h2 className="text-xl font-semibold text-brand-black mb-5">{t.contact.formTitle}</h2>
+        <div className="bg-white/95 backdrop-blur rounded-xl p-4 md:p-5 shadow-lg scroll-mt-24" id="contact-form">
+          <h2 className="text-lg font-semibold text-brand-black mb-3">{t.contact.formTitle}</h2>
           <ContactForm translations={t} />
         </div>
       </div>

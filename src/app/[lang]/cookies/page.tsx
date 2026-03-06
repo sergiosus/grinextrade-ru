@@ -2,7 +2,7 @@ import type { Locale } from '@/lib/i18n/config';
 import { getTranslations } from '@/lib/i18n/translations';
 import { generateSeoMetadata } from '@/components/Seo';
 
-const EMAIL = 'info@grinextrade.com';
+const EMAIL = 'info@grinextrade.ru';
 
 type Props = { params: Promise<{ lang: Locale }> };
 

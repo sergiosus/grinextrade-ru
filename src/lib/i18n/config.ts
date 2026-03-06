@@ -1,19 +1,18 @@
-export const locales = ['en', 'ru', 'ar', 'zh', 'tr', 'ro', 'kk'] as const;
+export const locales = ['ru', 'en', 'kz', 'uz', 'kg', 'tj'] as const;
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = 'en';
+export const defaultLocale: Locale = 'ru';
 
 export const localeNames: Record<Locale, string> = {
-  en: 'English',
   ru: 'Русский',
-  ar: 'العربية',
-  zh: '中文',
-  tr: 'Türkçe',
-  ro: 'Română',
-  kk: 'Қазақша',
+  en: 'English',
+  kz: 'Қазақша',
+  uz: 'Oʻzbekcha',
+  kg: 'Кыргызча',
+  tj: 'Тоҷикӣ',
 };
 
-export const rtlLocales: Locale[] = ['ar'];
+export const rtlLocales: Locale[] = [];
 
 export function isRtl(locale: Locale): boolean {
   return rtlLocales.includes(locale);
@@ -25,18 +24,17 @@ export const browserLocaleMap: Record<string, Locale> = {
   'en-GB': 'en',
   ru: 'ru',
   'ru-RU': 'ru',
-  ar: 'ar',
-  'ar-SA': 'ar',
-  'ar-AE': 'ar',
-  zh: 'zh',
-  'zh-CN': 'zh',
-  'zh-TW': 'zh',
-  tr: 'tr',
-  'tr-TR': 'tr',
-  ro: 'ro',
-  'ro-RO': 'ro',
-  kk: 'kk',
-  'kk-KZ': 'kk',
+  kz: 'kz',
+  'kk-KZ': 'kz',
+  'kk': 'kz',
+  uz: 'uz',
+  'uz-UZ': 'uz',
+  kg: 'kg',
+  'ky-KG': 'kg',
+  'ky': 'kg',
+  tj: 'tj',
+  'tg-TJ': 'tj',
+  'tg': 'tj',
 };
 
 export function getLocaleFromBrowser(acceptLanguage: string | null): Locale {

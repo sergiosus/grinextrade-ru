@@ -1,6 +1,6 @@
 import { locales } from '@/lib/i18n/config';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.ru';
 
 export default function sitemap() {
   const paths = ['', '/products', '/government', '/about', '/contact'];

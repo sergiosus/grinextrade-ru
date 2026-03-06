@@ -26,6 +26,14 @@ export default async function HomePage({ params }: Props) {
       <OrganizationJsonLd />
       <HeroSection lang={lang} t={t} />
 
+      <section className="py-8 bg-white border-b border-gray-light">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-medium text-lg">
+            {t.home.cisRegionBlurb}
+          </p>
+        </div>
+      </section>
+
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
@@ -142,16 +150,59 @@ export default async function HomePage({ params }: Props) {
       <section className="py-16 md:py-20 bg-gray-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.industriesServed}
+            {t.home.b2bSectorsTitle}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {(t.home.industriesCards ?? t.home.industries).map((ind) => (
+            {t.home.b2bSectorsItems.map((ind) => (
               <div
                 key={ind}
                 className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-light hover:shadow-md transition"
               >
                 <p className="font-medium text-brand-black">{ind}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
+            {t.home.logisticsTitle}
+          </h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 max-w-4xl mx-auto">
+            {t.home.logisticsItems.map((item) => (
+              <li key={item} className="flex items-center gap-2 text-gray-medium">
+                <span className="text-primary">•</span> {item}
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap justify-center gap-4">
+            {t.home.terms.map((term) => (
+              <span
+                key={term}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-gray-light text-primary font-semibold rounded-lg border border-primary/30"
+              >
+                {term}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20 bg-gray-light">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
+            {t.home.geographyTitle}
+          </h2>
+          <div className="flex flex-wrap justify-center gap-4">
+            {t.home.geographyCountries.map((country) => (
+              <span
+                key={country}
+                className="px-5 py-3 bg-white rounded-xl font-medium text-brand-black border border-gray-light shadow-sm"
+              >
+                {country}
+              </span>
             ))}
           </div>
         </div>

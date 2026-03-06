@@ -23,10 +23,10 @@ export function ProductCard({ product, locale, categoryText }: Props) {
           className="group-hover:scale-105 transition-transform duration-500"
         />
       </div>
-      <div className="p-5 flex-1 flex flex-col">
-        <h2 className="font-semibold text-brand-black text-lg mb-1.5">{name}</h2>
-        <p className="text-sm text-primary font-medium mb-3">{categoryText}</p>
-        <p className="text-gray-medium text-sm flex-1 line-clamp-3 leading-relaxed">{description}</p>
+      <div className="p-4 flex-1 flex flex-col min-h-0">
+        <h2 className="font-semibold text-brand-black text-lg mb-1 line-clamp-2">{name}</h2>
+        <p className="text-sm text-primary font-medium mb-2 line-clamp-1">{categoryText}</p>
+        <p className="text-gray-medium text-sm flex-1 line-clamp-3 md:line-clamp-4 leading-relaxed min-h-0">{description}</p>
       </div>
     </article>
   );

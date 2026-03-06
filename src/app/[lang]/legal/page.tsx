@@ -3,7 +3,7 @@ import { getTranslations } from '@/lib/i18n/translations';
 import { generateSeoMetadata } from '@/components/Seo';
 import Link from 'next/link';
 
-const EMAIL = 'info@grinextrade.com';
+const EMAIL = 'info@grinextrade.ru';
 
 type Props = { params: Promise<{ lang: Locale }> };
 
@@ -51,7 +51,7 @@ export default async function LegalPage({ params }: Props) {
         <div className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
           <section>
             <h2 className="text-xl font-semibold text-brand-black mb-4">
-              {legal.companySectionTitle ?? 'Company Information'}
+              {legal.companySectionTitle}
             </h2>
             <ul className="space-y-2 text-sm text-gray-medium">
               <li><span className="font-semibold text-brand-black">{legal.companyLegalNameLabel}:</span> {legal.companyLegalName}</li>
@@ -64,7 +64,7 @@ export default async function LegalPage({ params }: Props) {
 
           <section className="pt-6 border-t border-gray-light">
             <h2 className="text-xl font-semibold text-brand-black mb-4">
-              {legal.exportComplianceSectionTitle ?? 'Export Compliance Statement'}
+              {legal.exportComplianceSectionTitle}
             </h2>
             <ul className="list-disc list-inside space-y-2 text-gray-medium">
               {legal.exportComplianceP1 && <li>{legal.exportComplianceP1}</li>}
@@ -83,7 +83,7 @@ export default async function LegalPage({ params }: Props) {
 
           <section className="pt-6 border-t border-gray-light">
             <h2 className="text-xl font-semibold text-brand-black mb-4">
-              {legal.sanctionsSectionTitle ?? 'Sanctions Compliance'}
+              {legal.sanctionsSectionTitle}
             </h2>
             {legal.sanctionsP1 && <p className="text-gray-medium">{legal.sanctionsP1}</p>}
             {legal.sanctionsP2 && <p className="mt-2 text-gray-medium">{legal.sanctionsP2}</p>}

@@ -5,13 +5,12 @@ import type { Locale } from '@/lib/i18n/config';
 import { isRtl } from '@/lib/i18n/config';
 
 const localeToHtmlLang: Record<Locale, string> = {
-  en: 'en',
   ru: 'ru',
-  ar: 'ar',
-  zh: 'zh',
-  tr: 'tr',
-  ro: 'ro',
-  kk: 'kk',
+  en: 'en',
+  kz: 'kk',
+  uz: 'uz',
+  kg: 'ky',
+  tj: 'tg',
 };
 
 type Props = { locale: Locale };

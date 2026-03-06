@@ -50,10 +50,10 @@ export default async function GovernmentPage({ params }: Props) {
             <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.tenderContact}</h2>
             <p className="text-gray-medium">
               <a
-                href="mailto:tender@grinextrade.com"
+                href="mailto:tender@grinextrade.ru"
                 className="text-primary hover:text-accent-red hover:underline font-medium"
               >
-                tender@grinextrade.com
+                tender@grinextrade.ru
               </a>
             </p>
           </section>

@@ -4,10 +4,12 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
   useMemo,
   type ReactNode,
 } from 'react';
+import { createPortal } from 'react-dom';
 import type { Locale } from '@/lib/i18n/config';
 import type { Translations } from '@/lib/i18n/translations';
 import { CountrySelect } from '@/components/CountrySelect';
@@ -90,7 +92,7 @@ type ModalProps = {
 
 function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProps) {
   const t = useMemo(() => (translations as Translations & { quoteModal?: Record<string, string> }).quoteModal ?? {
-    title: 'Request Quote',
+    title: locale === 'ru' ? 'Форма запроса' : 'Request Form',
     companyName: 'Company name',
     contactPerson: 'Contact person',
     email: 'Email',
@@ -104,8 +106,16 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
     sendRequest: 'Send Request',
     successMessage: 'Thank you. Your request has been sent. We will contact you shortly.',
     errorMessage: 'Failed to send request. Please try again later.',
-  }, [translations]);
+  }, [translations, locale]);
   const common = translations.common;
+
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
 
   const [product, setProduct] = useState(initialProduct);
   const [quantity, setQuantity] = useState('');
@@ -177,171 +187,182 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
   }, [formData, common, phone, product, quantity, onClose]);
 
   if (status === 'success') {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-hidden />
-        <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-gray-light p-8 text-center">
-          <p className="text-green-600 font-medium mb-4">{t.successMessage}</p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-sm text-gray-medium hover:text-brand-black"
-          >
-            {t.close}
-          </button>
+    const successModal = (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden">
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+        <div className="relative w-[calc(100%-24px)] sm:w-full max-w-[680px] max-h-[72vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+          <div className="overflow-y-auto max-h-[72vh] p-4 text-center">
+            <p className="text-green-600 font-medium mb-3 text-sm">{t.successMessage}</p>
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm text-gray-medium hover:text-brand-black"
+            >
+              {t.close}
+            </button>
+          </div>
         </div>
       </div>
     );
+    if (typeof document !== 'undefined') {
+      return createPortal(successModal, document.body);
+    }
+    return null;
   }
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-20 sm:pt-16">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
+  const formModal = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden">
       <div
-        className="relative w-full max-w-[720px] max-h-[85vh] rounded-2xl bg-white shadow-2xl border border-gray-light flex flex-col"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div
+        className="relative w-[calc(100%-24px)] sm:w-full max-w-[680px] max-h-[72vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-labelledby="quote-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex-shrink-0 px-6 pt-6 pb-2 flex items-center justify-between border-b border-gray-light">
-          <h2 id="quote-modal-title" className="text-xl font-bold text-brand-black">
-            {t.title}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 -mr-2 rounded-lg text-gray-medium hover:bg-gray-light transition"
-            aria-label={t.close}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+        <div className="overflow-y-auto max-h-[72vh] p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 id="quote-modal-title" className="text-lg font-bold text-brand-black">
+              {t.title}
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 -mr-1.5 rounded-lg text-gray-medium hover:bg-gray-light transition"
+              aria-label={t.close}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-        <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit}>
-          <div className="flex-1 min-h-0 overflow-y-auto">
-          <div className="p-6 pt-5 space-y-4">
+          <form className="space-y-3" onSubmit={handleSubmit}>
             {status === 'error' && (
-              <p className="p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+              <p className="p-2.5 rounded-lg bg-red-100 text-red-700 text-sm">
                 {t.errorMessage}
               </p>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-brand-black mb-1">{t.companyName}</label>
+              <label className="block text-sm font-medium text-brand-black mb-0.5">{t.companyName}</label>
             <input
               type="text"
               value={company}
               onChange={(e) => { setCompany(e.target.value); clearError('company'); }}
-              className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('company')}`}
+              className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('company')}`}
               aria-invalid={!!errors.company}
             />
-            {errors.company && <p className="mt-1 text-sm text-red-600">{errors.company}</p>}
+            {errors.company && <p className="mt-0.5 text-xs text-red-600">{errors.company}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.contactPerson}</label>
+            <label className="block text-sm font-medium text-brand-black mb-0.5">{t.contactPerson}</label>
             <input
               type="text"
               value={contactPerson}
               onChange={(e) => { setContactPerson(e.target.value); clearError('contactPerson'); }}
-              className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('contactPerson')}`}
+              className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('contactPerson')}`}
               aria-invalid={!!errors.contactPerson}
             />
-            {errors.contactPerson && <p className="mt-1 text-sm text-red-600">{errors.contactPerson}</p>}
+            {errors.contactPerson && <p className="mt-0.5 text-xs text-red-600">{errors.contactPerson}</p>}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-brand-black mb-1">{t.email}</label>
+              <label className="block text-sm font-medium text-brand-black mb-0.5">{t.email}</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); clearError('email'); }}
-                className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('email')}`}
+                className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('email')}`}
                 aria-invalid={!!errors.email}
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              {errors.email && <p className="mt-0.5 text-xs text-red-600">{errors.email}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-brand-black mb-1">{t.phone}</label>
+              <label className="block text-sm font-medium text-brand-black mb-0.5">{t.phone}</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full h-10 px-3 py-2 rounded-lg border text-sm border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.country}</label>
+            <label className="block text-sm font-medium text-brand-black mb-0.5">{t.country}</label>
             <CountrySelect
               value={country}
               onChange={(v) => { setCountry(v); clearError('country'); }}
               placeholder={t.countryPlaceholder}
-              className="w-full"
+              className="w-full [&_input]:h-10 [&_input]:py-2 [&_input]:px-3 [&_input]:text-sm"
               hasError={!!errors.country}
             />
-            {errors.country && <p className="mt-1 text-sm text-red-600">{errors.country}</p>}
+            {errors.country && <p className="mt-0.5 text-xs text-red-600">{errors.country}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-brand-black mb-0.5">{t.productLabel}</label>
+              <input
+                type="text"
+                value={product}
+                onChange={(e) => setProduct(e.target.value)}
+                className="w-full h-10 px-3 py-2 rounded-lg border text-sm border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-brand-black mb-0.5">{t.quantityLabel}</label>
+              <input
+                type="text"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                placeholder={t.quantityPlaceholder}
+                className="w-full h-10 px-3 py-2 rounded-lg border text-sm border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.productLabel}</label>
-            <input
-              type="text"
-              value={product}
-              onChange={(e) => setProduct(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.quantityLabel}</label>
-            <input
-              type="text"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              placeholder="e.g. 1000 pcs"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.message}</label>
+            <label className="block text-sm font-medium text-brand-black mb-0.5">{t.message}</label>
             <textarea
               value={message}
               onChange={(e) => { setMessage(e.target.value); clearError('message'); }}
               rows={3}
-              className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('message')}`}
+              className={`w-full min-h-[88px] px-3 py-2 rounded-lg border text-sm resize-y ${inputBorder('message')}`}
               aria-invalid={!!errors.message}
             />
-            {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
+            {errors.message && <p className="mt-0.5 text-xs text-red-600">{errors.message}</p>}
           </div>
 
-          </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3 pt-4 pb-2 flex-shrink-0 bg-white border-t border-gray-light px-6 py-4">
+            <div className="flex flex-wrap gap-2 pt-2">
             <button
               type="submit"
               disabled={!valid || isSubmitting}
-              className="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-accent-red transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-accent-red transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSubmitting ? common.submitting : t.sendRequest}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 border border-gray-medium text-brand-black font-medium rounded-lg hover:bg-gray-light transition"
+              className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-medium text-brand-black hover:bg-gray-light transition"
             >
               {t.close}
             </button>
-          </div>
-        </form>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
+  if (typeof document !== 'undefined') {
+    return createPortal(formModal, document.body);
+  }
+  return null;
 }

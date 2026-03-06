@@ -101,118 +101,119 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-2.5 max-w-xl">
       {status === 'success' && (
-        <p className="p-3 rounded-lg bg-green-100 text-green-800 text-sm">
+        <p className="p-2.5 rounded-lg bg-green-100 text-green-800 text-sm">
           {quoteModal.successMessage}
         </p>
       )}
       {status === 'error' && (
-        <p className="p-3 rounded-lg bg-red-100 text-red-800 text-sm">{quoteModal.errorMessage}</p>
+        <p className="p-2.5 rounded-lg bg-red-100 text-red-800 text-sm">{quoteModal.errorMessage}</p>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.companyName}</label>
+        <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.companyName}</label>
         <input
           type="text"
           value={company}
           onChange={(e) => { setCompany(e.target.value); setErrors((prev) => ({ ...prev, company: undefined })); }}
-          className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('company')}`}
+          className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('company')}`}
           aria-invalid={!!errors.company}
         />
-        {errors.company && <p className="mt-1 text-sm text-red-600">{errors.company}</p>}
+        {errors.company && <p className="mt-0.5 text-xs text-red-600">{errors.company}</p>}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.contactPerson}</label>
+        <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.contactPerson}</label>
         <input
           type="text"
           value={contactPerson}
           onChange={(e) => { setContactPerson(e.target.value); setErrors((prev) => ({ ...prev, contactPerson: undefined })); }}
-          className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('contactPerson')}`}
+          className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('contactPerson')}`}
           aria-invalid={!!errors.contactPerson}
         />
-        {errors.contactPerson && <p className="mt-1 text-sm text-red-600">{errors.contactPerson}</p>}
+        {errors.contactPerson && <p className="mt-0.5 text-xs text-red-600">{errors.contactPerson}</p>}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         <div>
-          <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.email}</label>
+          <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.email}</label>
           <input
             type="email"
             value={email}
             onChange={(e) => { setEmail(e.target.value); setErrors((prev) => ({ ...prev, email: undefined })); }}
-            className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('email')}`}
+            className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('email')}`}
             aria-invalid={!!errors.email}
           />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+          {errors.email && <p className="mt-0.5 text-xs text-red-600">{errors.email}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.phone}</label>
+          <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.phone}</label>
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full h-10 px-3 py-2 rounded-lg border text-sm border-gray-medium/30 focus:ring-2 focus:ring-primary focus:border-primary"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.country}</label>
+        <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.country}</label>
         <CountrySelect
           value={country}
           onChange={(v) => { setCountry(v); setErrors((prev) => ({ ...prev, country: undefined })); }}
           placeholder={t.quoteModal.countryPlaceholder}
-          className="w-full"
+          className="w-full [&_input]:h-10 [&_input]:py-2 [&_input]:px-3 [&_input]:text-sm"
           hasError={!!errors.country}
         />
-        {errors.country && <p className="mt-1 text-sm text-red-600">{errors.country}</p>}
+        {errors.country && <p className="mt-0.5 text-xs text-red-600">{errors.country}</p>}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div>
+          <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.productName}</label>
+          <input
+            type="text"
+            value={productName}
+            onChange={(e) => { setProductName(e.target.value); setErrors((prev) => ({ ...prev, productName: undefined })); }}
+            placeholder={contactLabels.productName}
+            className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('productName')}`}
+            aria-invalid={!!errors.productName}
+          />
+          {errors.productName && <p className="mt-0.5 text-xs text-red-600">{errors.productName}</p>}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.quantity}</label>
+          <input
+            type="text"
+            value={quantity}
+            onChange={(e) => { setQuantity(e.target.value); setErrors((prev) => ({ ...prev, quantity: undefined })); }}
+            placeholder={t.quoteModal.quantityPlaceholder}
+            className={`w-full h-10 px-3 py-2 rounded-lg border text-sm ${inputBorder('quantity')}`}
+            aria-invalid={!!errors.quantity}
+          />
+          {errors.quantity && <p className="mt-0.5 text-xs text-red-600">{errors.quantity}</p>}
+        </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.productName}</label>
-        <input
-          type="text"
-          value={productName}
-          onChange={(e) => { setProductName(e.target.value); setErrors((prev) => ({ ...prev, productName: undefined })); }}
-          placeholder={contactLabels.productName}
-          className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('productName')}`}
-          aria-invalid={!!errors.productName}
-        />
-        {errors.productName && <p className="mt-1 text-sm text-red-600">{errors.productName}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.quantity}</label>
-        <input
-          type="text"
-          value={quantity}
-          onChange={(e) => { setQuantity(e.target.value); setErrors((prev) => ({ ...prev, quantity: undefined })); }}
-          placeholder="e.g. 1000 pcs"
-          className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('quantity')}`}
-          aria-invalid={!!errors.quantity}
-        />
-        {errors.quantity && <p className="mt-1 text-sm text-red-600">{errors.quantity}</p>}
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-brand-black mb-1">{contactLabels.message}</label>
+        <label className="block text-sm font-medium text-brand-black mb-0.5">{contactLabels.message}</label>
         <textarea
           value={message}
           onChange={(e) => { setMessage(e.target.value); setErrors((prev) => ({ ...prev, message: undefined })); }}
           rows={3}
-          className={`w-full px-4 py-2.5 rounded-lg border ${inputBorder('message')}`}
+          className={`w-full min-h-[88px] px-3 py-2 rounded-lg border text-sm resize-y ${inputBorder('message')}`}
           aria-invalid={!!errors.message}
         />
-        {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
+        {errors.message && <p className="mt-0.5 text-xs text-red-600">{errors.message}</p>}
       </div>
 
-      <div>
+      <div className="pt-1">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-accent-red transition disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-accent-red transition disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isSubmitting ? common.submitting : quoteModal.sendRequest}
         </button>

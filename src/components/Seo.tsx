@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import type { Locale } from '@/lib/i18n/config';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.com';
-const baseTitle = 'Grinex Trade – Supplier of industrial and textile products';
-const baseDescription =
-  'Grinex Trade supplies textile and industrial products for international B2B clients. Product range includes waffle towels, hotel bedding, O-rings and sealing solutions.';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.ru';
+const baseTitleRu = 'Grinex Trade — поставщик промышленной и текстильной продукции | B2B';
+const baseDescriptionRu =
+  'Grinex Trade — поставщик текстильной и промышленной продукции для B2B клиентов в России и странах СНГ. Оптовые поставки и коммерческие предложения по запросу.';
+const baseTitleEn = 'Grinex Trade – Supplier of industrial and textile products | B2B';
+const baseDescriptionEn =
+  'Grinex Trade supplies textile and industrial products for B2B clients in Russia and CIS. Wholesale delivery and quotations on request.';
 
 type Props = {
   title: string;
@@ -15,18 +18,27 @@ type Props = {
 };
 
 const localeAlternates: Record<Locale, string> = {
-  en: 'en_US',
   ru: 'ru_RU',
-  ar: 'ar_SA',
-  zh: 'zh_CN',
-  tr: 'tr_TR',
-  ro: 'ro_RO',
-  kk: 'kk_KZ',
+  en: 'en_US',
+  kz: 'kk_KZ',
+  uz: 'uz_UZ',
+  kg: 'ky_KG',
+  tj: 'tg_TJ',
 };
+
+function getBaseTitle(locale: Locale): string {
+  return locale === 'en' ? baseTitleEn : baseTitleRu;
+}
+
+function getBaseDescription(locale: Locale): string {
+  return locale === 'en' ? baseDescriptionEn : baseDescriptionRu;
+}
 
 export function generateSeoMetadata({ title, description, path, locale, noIndex }: Props): Metadata {
   const url = `${siteUrl}/${locale}${path}`;
   const lang = localeAlternates[locale];
+  const baseTitle = getBaseTitle(locale);
+  const baseDescription = getBaseDescription(locale);
   const resolvedTitle = title ? `${title} | ${baseTitle}` : baseTitle;
   const resolvedDescription = description || baseDescription;
   return {
@@ -48,7 +60,9 @@ export function generateSeoMetadata({ title, description, path, locale, noIndex 
     alternates: {
       canonical: url,
     },
-    ...(noIndex && { robots: { index: false, follow: true } }),
+    robots: noIndex
+      ? { index: false, follow: true }
+      : { index: true, follow: true, googleBot: { index: true, follow: true } },
   };
 }
 
@@ -59,13 +73,13 @@ export function OrganizationJsonLd() {
     name: 'Grinex Trade',
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
-    description: baseDescription,
+    description: baseDescriptionRu,
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'info@grinextrade.com',
+      email: 'info@grinextrade.ru',
       telephone: '+7-912-447-54-19',
       contactType: 'customer service',
-      areaServed: 'International',
+      areaServed: ['RU', 'KZ', 'UZ', 'KG', 'TJ', 'BY'],
     },
     sameAs: ['https://t.me/grinextrade'],
   };

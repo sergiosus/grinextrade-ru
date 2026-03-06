@@ -9,7 +9,7 @@ import { useState, useRef, useEffect } from 'react';
 
 const WHATSAPP_URL = 'https://wa.me/79124475419';
 const TELEGRAM_URL = 'https://t.me/grinextrade';
-const EMAIL = 'info@grinextrade.com';
+const EMAIL = 'info@grinextrade.ru';
 
 const EMAIL_ICON = (
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { locales, defaultLocale, getLocaleFromBrowser } from '@/lib/i18n/config';
+import { locales, defaultLocale } from '@/lib/i18n/config';
 
-const localePathRegex = /^\/(en|ru|ar|zh|tr|ro|kk)(\/|$)/;
+const localePathRegex = /^\/(ru|en|kz|uz|kg|tj)(\/|$)/;
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -22,11 +22,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Root: redirect based on Accept-Language
+  // Root: always show Russian (default locale for grinextrade.ru)
   if (pathname === '/') {
-    const acceptLanguage = request.headers.get('accept-language');
-    const locale = getLocaleFromBrowser(acceptLanguage);
-    return NextResponse.redirect(new URL(`/${locale}`, request.url));
+    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
   }
 
   // Unknown path without locale: assume default

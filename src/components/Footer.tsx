@@ -6,7 +6,7 @@ import { CookieSettingsLink } from '@/components/CookieConsent';
 
 const WHATSAPP_URL = 'https://wa.me/79124475419';
 const TELEGRAM_URL = 'https://t.me/grinextrade';
-const EMAIL = 'info@grinextrade.com';
+const EMAIL = 'info@grinextrade.ru';
 
 const mainNavKeys: (keyof Translations['nav'])[] = ['home', 'products', 'government', 'about', 'contact'];
 const mainNavPaths: Record<string, string> = {

@@ -3,9 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import type { Product } from '@/types/product';
+import type { Product, LocalizedString } from '@/types/product';
 import type { Locale } from '@/lib/i18n/config';
 import { locales } from '@/lib/i18n/config';
+
+function toRecord(o: LocalizedString | undefined): Record<Locale, string> {
+  const base = o ?? { en: '' };
+  return Object.fromEntries(locales.map((l) => [l, base[l] ?? base.en ?? ''])) as Record<Locale, string>;
+}
 
 export default function EditProductPage() {
   const router = useRouter();
@@ -23,8 +28,8 @@ export default function EditProductPage() {
       .then((r) => r.json())
       .then((p: Product) => {
         setImage(p.image ?? '');
-        setName(p.name ?? ({} as Record<Locale, string>));
-        setDescription(p.description ?? ({} as Record<Locale, string>));
+        setName(toRecord(p.name));
+        setDescription(toRecord(p.description));
         setCategory(p.category ?? '');
       })
       .catch(() => {})
