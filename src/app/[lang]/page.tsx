@@ -78,7 +78,7 @@ export default async function HomePage({ params }: Props) {
 
       <section className="py-16 md:py-20 bg-gray-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-12 uppercase tracking-wide">
+          <h2 className="text-3xl font-bold text-brand-black text-center mb-12 tracking-wide">
             {t.home.globalExportTitle}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
