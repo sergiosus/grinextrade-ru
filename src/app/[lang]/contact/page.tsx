@@ -118,8 +118,8 @@ export default async function ContactPage({ params }: Props) {
           </a>
         </div>
 
-        <div className="bg-white/95 backdrop-blur rounded-xl p-6 md:p-8 shadow-lg">
-          <h2 className="text-xl font-semibold text-brand-black mb-4">{t.contact.formTitle}</h2>
+        <div className="bg-white/95 backdrop-blur rounded-xl p-6 md:p-8 pt-8 md:pt-10 shadow-lg scroll-mt-24" id="contact-form">
+          <h2 className="text-xl font-semibold text-brand-black mb-5">{t.contact.formTitle}</h2>
           <ContactForm translations={t} />
         </div>
       </div>

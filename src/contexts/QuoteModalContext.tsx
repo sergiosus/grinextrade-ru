@@ -195,23 +195,23 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-20 sm:pt-16">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div
-        className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-gray-light max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-[720px] max-h-[85vh] rounded-2xl bg-white shadow-2xl border border-gray-light flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-labelledby="quote-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white border-b border-gray-light px-6 py-4 flex items-center justify-between z-10">
+        <div className="flex-shrink-0 px-6 pt-6 pb-2 flex items-center justify-between border-b border-gray-light">
           <h2 id="quote-modal-title" className="text-xl font-bold text-brand-black">
             {t.title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-gray-medium hover:bg-gray-light transition"
+            className="p-2 -mr-2 rounded-lg text-gray-medium hover:bg-gray-light transition"
             aria-label={t.close}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,15 +220,17 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
           </button>
         </div>
 
-        <form className="p-6 space-y-4" onSubmit={handleSubmit}>
-          {status === 'error' && (
-            <p className="p-3 rounded-lg bg-red-100 text-red-700 text-sm">
-              {t.errorMessage}
-            </p>
-          )}
+        <form className="flex flex-col flex-1 min-h-0" onSubmit={handleSubmit}>
+          <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="p-6 pt-5 space-y-4">
+            {status === 'error' && (
+              <p className="p-3 rounded-lg bg-red-100 text-red-700 text-sm">
+                {t.errorMessage}
+              </p>
+            )}
 
-          <div>
-            <label className="block text-sm font-medium text-brand-black mb-1">{t.companyName}</label>
+            <div>
+              <label className="block text-sm font-medium text-brand-black mb-1">{t.companyName}</label>
             <input
               type="text"
               value={company}
@@ -319,7 +321,10 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
             {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
           </div>
 
-          <div className="flex flex-wrap gap-3 pt-2">
+          </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 pt-4 pb-2 flex-shrink-0 bg-white border-t border-gray-light px-6 py-4">
             <button
               type="submit"
               disabled={!valid || isSubmitting}

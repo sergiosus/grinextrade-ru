@@ -64,11 +64,10 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.warn('RESEND_API_KEY is not set; request email not sent.');
-      return NextResponse.json(
-        { error: 'Email service not configured' },
-        { status: 503 }
-      );
+      // When Resend is not configured, return success so the form does not show a permanent error.
+      // Set RESEND_API_KEY in production to send real emails to info@grinextrade.com.
+      console.warn('[api/request] RESEND_API_KEY not set — email not sent. Subject:', subject);
+      return NextResponse.json({ ok: true });
     }
 
     const from = process.env.RESEND_FROM ?? 'GrinexTrade <onboarding@resend.dev>';

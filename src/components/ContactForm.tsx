@@ -104,11 +104,11 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
     <form onSubmit={handleSubmit} className="space-y-4">
       {status === 'success' && (
         <p className="p-3 rounded-lg bg-green-100 text-green-800 text-sm">
-          {common.rfqSuccess}
+          {quoteModal.successMessage}
         </p>
       )}
       {status === 'error' && (
-        <p className="p-3 rounded-lg bg-red-100 text-red-800 text-sm">{common.formError}</p>
+        <p className="p-3 rounded-lg bg-red-100 text-red-800 text-sm">{quoteModal.errorMessage}</p>
       )}
 
       <div>
