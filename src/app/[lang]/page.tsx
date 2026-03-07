@@ -151,59 +151,6 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      {/* Supplier profile */}
-      <section className="py-16 md:py-20 bg-gray-light">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-10">
-            {t.home.supplierProfileTitle}
-          </h2>
-          <div className="bg-white rounded-2xl border border-gray-light shadow-sm overflow-hidden">
-            <dl className="divide-y divide-gray-light">
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileCompany}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileCompanyValue || 'Grinex Trade LLC'}</dd>
-              </div>
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileBusinessType}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileBusinessTypeValue || 'Export trading company'}</dd>
-              </div>
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileProducts}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">
-                  {'supplierProfileProductsList' in t.home && Array.isArray(t.home.supplierProfileProductsList) ? (
-                    <ul className="list-disc list-inside space-y-1">
-                      {t.home.supplierProfileProductsList.map((p: string) => (
-                        <li key={p}>{p}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    t.home.supplierProfileProductsValue || 'Textile products and industrial sealing components'
-                  )}
-                </dd>
-              </div>
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileExportFormat}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileExportFormatValue || 'B2B contract supply'}</dd>
-              </div>
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileDeliveryTerms}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileDeliveryTermsValue || 'EXW / FCA / DAP'}</dd>
-              </div>
-              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
-                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileDocumentation}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">
-                  <ul className="list-disc list-inside space-y-1">
-                    {t.home.supplierProfileDocList.map((doc: string) => (
-                      <li key={doc}>{doc}</li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </section>
-
       {/* Industries served */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
