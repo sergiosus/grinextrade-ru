@@ -69,26 +69,28 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* Geography of supply */}
       <section className="py-16 md:py-20 bg-gray-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.whyChooseUs}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {t.home.whyItems.map((item) => (
-              <div
-                key={item}
-                className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-light"
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-brand-black mb-6">{t.home.geographyTitle}</h2>
+          <p className="text-gray-medium mb-6">{t.home.geographyIntro}</p>
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
+            {t.home.geographyCountries.map((country: string) => (
+              <span
+                key={country}
+                className="px-4 py-2 bg-white rounded-lg font-medium text-brand-black border border-gray-light shadow-sm"
               >
-                <p className="font-medium text-brand-black">{item}</p>
-              </div>
+                {country}
+              </span>
             ))}
           </div>
+          {'geographyNote' in t.home && t.home.geographyNote && (
+            <p className="text-gray-medium text-sm">{t.home.geographyNote}</p>
+          )}
         </div>
       </section>
 
-      {/* Export Delivery Terms — single section */}
+      {/* Delivery terms — once */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-brand-black mb-6">{t.home.exportTerms}</h2>
@@ -99,56 +101,57 @@ export default async function HomePage({ params }: Props) {
                 key={term}
                 className="inline-flex items-center gap-2 px-5 py-3 bg-gray-light text-primary font-semibold rounded-lg border border-primary/30"
               >
-                <svg className="w-5 h-5 text-primary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
                 {term}
               </span>
             ))}
           </div>
-          <p className="text-gray-medium text-sm">{t.home.exportTermsNote}</p>
+          {'exportTermsEXW' in t.home && t.home.exportTermsEXW && (
+            <ul className="text-left max-w-md mx-auto space-y-2 text-gray-medium text-sm mt-6">
+              <li>{t.home.exportTermsEXW}</li>
+              <li>{t.home.exportTermsFCA}</li>
+              <li>{t.home.exportTermsDAP}</li>
+            </ul>
+          )}
+          <p className="text-gray-medium text-sm mt-4">{t.home.exportTermsNote}</p>
         </div>
       </section>
 
-      {/* Industries Served */}
-      <section className="py-16 md:py-20 bg-gray-light">
+      {/* How we work */}
+      {'howWeWorkTitle' in t.home && t.home.howWeWorkTitle && (
+        <section className="py-16 md:py-20 bg-gray-light">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold text-brand-black text-center mb-10">
+              {t.home.howWeWorkTitle}
+            </h2>
+            <ol className="space-y-4 list-decimal list-inside text-gray-medium">
+              {t.home.howWeWorkSteps.map((step: string, i: number) => (
+                <li key={i} className="text-brand-black font-medium">{step}</li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* Why clients trust us */}
+      <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.industriesServed}
+            {t.home.whyChooseUs}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {(t.home.industriesHome || t.home.industries).map((ind: string) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {t.home.whyItems.map((item) => (
               <div
-                key={ind}
-                className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-light hover:shadow-md transition"
+                key={item}
+                className="bg-gray-light rounded-xl p-6 text-center border border-gray-light"
               >
-                <p className="font-medium text-brand-black">{ind}</p>
+                <p className="font-medium text-brand-black">• {item}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Export Markets */}
-      <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.exportMarketsTitle}
-          </h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {(t.home.exportMarketsItems || t.home.geographyCountries).map((item: string) => (
-              <span
-                key={item}
-                className="px-5 py-3 bg-gray-light rounded-xl font-medium text-brand-black border border-gray-light shadow-sm"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Supplier Profile */}
+      {/* Supplier profile */}
       <section className="py-16 md:py-20 bg-gray-light">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-10">
@@ -166,7 +169,17 @@ export default async function HomePage({ params }: Props) {
               </div>
               <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
                 <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileProducts}</dt>
-                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileProductsValue || 'Textile products and industrial sealing components'}</dd>
+                <dd className="mt-1 text-brand-black sm:mt-0">
+                  {'supplierProfileProductsList' in t.home && Array.isArray(t.home.supplierProfileProductsList) ? (
+                    <ul className="list-disc list-inside space-y-1">
+                      {t.home.supplierProfileProductsList.map((p: string) => (
+                        <li key={p}>{p}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    t.home.supplierProfileProductsValue || 'Textile products and industrial sealing components'
+                  )}
+                </dd>
               </div>
               <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
                 <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileExportFormat}</dt>
@@ -187,6 +200,25 @@ export default async function HomePage({ params }: Props) {
                 </dd>
               </div>
             </dl>
+          </div>
+        </div>
+      </section>
+
+      {/* Industries served */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
+            {t.home.industriesServed}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {(t.home.industriesHome || t.home.industries).map((ind: string) => (
+              <div
+                key={ind}
+                className="bg-gray-light rounded-xl p-6 text-center border border-gray-light"
+              >
+                <p className="font-medium text-brand-black">{ind}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import type { Locale } from '@/lib/i18n/config';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.ru';
-const baseTitleRu = 'Grinex Trade LLC — экспортный поставщик текстиля и промышленных компонентов';
+const baseTitleRu = 'Grinex Trade – поставщик промышленной и текстильной продукции';
 const baseDescriptionRu =
-  'Grinex Trade LLC поставляет текстильную продукцию и промышленные уплотнительные компоненты для международных B2B клиентов и торговых компаний.';
+  'Поставки промышленной и текстильной продукции для B2B клиентов в России и странах СНГ.';
 const baseTitleEn = 'Grinex Trade LLC – Export Supplier of Textile and Industrial Components';
 const baseDescriptionEn =
   'Grinex Trade LLC supplies textile products and industrial sealing components for international B2B clients and trading companies.';

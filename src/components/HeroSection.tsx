@@ -26,6 +26,12 @@ export function HeroSection({ lang, t }: Props) {
           {t.home.heroSubtitle}
         </p>
         <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <Link
+            href={`${base}/products`}
+            className="px-8 py-3.5 bg-white text-brand-black font-semibold rounded-lg hover:bg-gray-light border border-white/50 transition"
+          >
+            {t.home.viewProducts}
+          </Link>
           <button
             type="button"
             onClick={() => openQuoteModal()}
@@ -33,12 +39,6 @@ export function HeroSection({ lang, t }: Props) {
           >
             {t.home.requestQuote}
           </button>
-          <Link
-            href={`${base}/products`}
-            className="px-8 py-3.5 bg-white text-brand-black font-semibold rounded-lg hover:bg-gray-light border border-white/50 transition"
-          >
-            {t.home.viewProducts}
-          </Link>
         </div>
         <div className="flex flex-wrap justify-center gap-6 md:gap-10 text-white/95 text-sm font-medium">
           {t.home.trustBadges.map((badge) => (
