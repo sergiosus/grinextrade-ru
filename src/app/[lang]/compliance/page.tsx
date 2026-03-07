@@ -45,7 +45,7 @@ export default async function CompliancePage({ params }: Props) {
           <ul className="space-y-2 text-gray-medium text-sm">
             <li>{t.government.incotermsEXW}</li>
             <li>{t.government.incotermsFCA}</li>
-            <li>{t.government.incotermsFOB}</li>
+            <li>{t.government.incotermsDAP}</li>
           </ul>
           <p className="mt-3 text-gray-medium text-sm italic">{t.government.incotermsNote}</p>
         </section>

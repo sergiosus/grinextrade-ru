@@ -26,14 +26,7 @@ export default async function HomePage({ params }: Props) {
       <OrganizationJsonLd />
       <HeroSection lang={lang} t={t} />
 
-      <section className="py-8 bg-white border-b border-gray-light">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-medium text-lg">
-            {t.home.cisRegionBlurb}
-          </p>
-        </div>
-      </section>
-
+      {/* Product Categories */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
@@ -76,60 +69,8 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      {/* Why Choose Us */}
       <section className="py-16 md:py-20 bg-gray-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-12 tracking-wide">
-            {t.home.globalExportTitle}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {t.home.globalExportItems.map((item, i) => (
-              <div
-                key={item}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-light flex items-start gap-4"
-              >
-                <span className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  {i === 0 && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0h.5a2.5 2.5 0 002.5-2.5V3.935M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  )}
-                  {i === 1 && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                    </svg>
-                  )}
-                  {i === 2 && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  )}
-                  {i === 3 && (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  )}
-                </span>
-                <p className="font-medium text-brand-black">{item}</p>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-wrap justify-center gap-4">
-            {t.home.terms.map((term) => (
-              <span
-                key={term}
-                className="inline-flex items-center gap-2 px-5 py-3 bg-white text-primary font-semibold rounded-lg border border-primary/30 shadow-sm"
-              >
-                <svg className="w-5 h-5 text-primary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-                {term}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
             {t.home.whyChooseUs}
@@ -147,13 +88,36 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      {/* Export Delivery Terms — single section */}
+      <section className="py-16 md:py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold text-brand-black mb-6">{t.home.exportTerms}</h2>
+          <p className="text-gray-medium mb-4">{t.home.exportTermsIntro}</p>
+          <div className="flex flex-wrap justify-center gap-4 mb-4">
+            {t.home.terms.map((term) => (
+              <span
+                key={term}
+                className="inline-flex items-center gap-2 px-5 py-3 bg-gray-light text-primary font-semibold rounded-lg border border-primary/30"
+              >
+                <svg className="w-5 h-5 text-primary/70" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                {term}
+              </span>
+            ))}
+          </div>
+          <p className="text-gray-medium text-sm">{t.home.exportTermsNote}</p>
+        </div>
+      </section>
+
+      {/* Industries Served */}
       <section className="py-16 md:py-20 bg-gray-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.b2bSectorsTitle}
+            {t.home.industriesServed}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {t.home.b2bSectorsItems.map((ind) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {(t.home.industriesHome || t.home.industries).map((ind: string) => (
               <div
                 key={ind}
                 className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-light hover:shadow-md transition"
@@ -165,63 +129,67 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
+      {/* Export Markets */}
       <section className="py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.logisticsTitle}
+            {t.home.exportMarketsTitle}
           </h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 max-w-4xl mx-auto">
-            {t.home.logisticsItems.map((item) => (
-              <li key={item} className="flex items-center gap-2 text-gray-medium">
-                <span className="text-primary">•</span> {item}
-              </li>
-            ))}
-          </ul>
           <div className="flex flex-wrap justify-center gap-4">
-            {t.home.terms.map((term) => (
+            {(t.home.exportMarketsItems || t.home.geographyCountries).map((item: string) => (
               <span
-                key={term}
-                className="inline-flex items-center gap-2 px-5 py-3 bg-gray-light text-primary font-semibold rounded-lg border border-primary/30"
+                key={item}
+                className="px-5 py-3 bg-gray-light rounded-xl font-medium text-brand-black border border-gray-light shadow-sm"
               >
-                {term}
+                {item}
               </span>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Supplier Profile */}
       <section className="py-16 md:py-20 bg-gray-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-brand-black text-center mb-12">
-            {t.home.geographyTitle}
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-brand-black text-center mb-10">
+            {t.home.supplierProfileTitle}
           </h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {t.home.geographyCountries.map((country) => (
-              <span
-                key={country}
-                className="px-5 py-3 bg-white rounded-xl font-medium text-brand-black border border-gray-light shadow-sm"
-              >
-                {country}
-              </span>
-            ))}
+          <div className="bg-white rounded-2xl border border-gray-light shadow-sm overflow-hidden">
+            <dl className="divide-y divide-gray-light">
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileCompany}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileCompanyValue || 'Grinex Trade LLC'}</dd>
+              </div>
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileBusinessType}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileBusinessTypeValue || 'Export trading company'}</dd>
+              </div>
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileProducts}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileProductsValue || 'Textile products and industrial sealing components'}</dd>
+              </div>
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileExportFormat}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileExportFormatValue || 'B2B contract supply'}</dd>
+              </div>
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileDeliveryTerms}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">{t.home.supplierProfileDeliveryTermsValue || 'EXW / FCA / DAP'}</dd>
+              </div>
+              <div className="px-6 py-4 sm:grid sm:grid-cols-[180px_1fr] sm:gap-4">
+                <dt className="text-sm font-medium text-gray-medium">{t.home.supplierProfileDocumentation}</dt>
+                <dd className="mt-1 text-brand-black sm:mt-0">
+                  <ul className="list-disc list-inside space-y-1">
+                    {t.home.supplierProfileDocList.map((doc: string) => (
+                      <li key={doc}>{doc}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            </dl>
           </div>
         </div>
       </section>
-
-      <section className="py-16 md:py-20 bg-gray-light">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-brand-black mb-6">
-            {t.home.trustedPartnerTitle}
-          </h2>
-          <p className="text-gray-medium text-lg leading-relaxed mb-4">
-            {t.home.trustedPartnerP1}
-          </p>
-          <p className="text-gray-medium text-lg leading-relaxed">
-            {t.home.trustedPartnerP2}
-          </p>
-        </div>
-      </section>
-
     </>
   );
 }

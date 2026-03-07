@@ -27,6 +27,17 @@ export default async function GovernmentPage({ params }: Props) {
         </h1>
         <p className="text-lg text-gray-medium mb-10">{t.government.intro}</p>
 
+        <section className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8 mb-10">
+          <h2 className="text-xl font-semibold text-brand-black mb-2">{t.government.exportDeliveryTermsTitle || t.government.incotermsTitle}</h2>
+          <p className="text-gray-medium mb-4">{t.government.incotermsIntro}</p>
+          <ul className="space-y-2 text-gray-medium text-sm">
+            <li>{t.government.incotermsEXW}</li>
+            <li>{t.government.incotermsFCA}</li>
+            <li>{t.government.incotermsDAP}</li>
+          </ul>
+          <p className="mt-3 text-gray-medium text-sm italic">{t.government.incotermsNote}</p>
+        </section>
+
         <div className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8">
           <section>
             <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.documentsAvailable}</h2>
