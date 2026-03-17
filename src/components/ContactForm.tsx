@@ -1,17 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import type { Locale } from '@/lib/i18n/config';
 import type { Translations } from '@/lib/i18n/translations';
 import { CountrySelect } from '@/components/CountrySelect';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type FieldErrors = Partial<Record<'company' | 'contactPerson' | 'email' | 'country' | 'productName' | 'quantity' | 'message', string>>;
+type FieldErrors = Partial<Record<'company' | 'contactPerson' | 'email' | 'country' | 'productName' | 'quantity' | 'message' | 'consent', string>>;
 
-type Props = { translations: Translations; initialProductName?: string };
+type Props = { translations: Translations; initialProductName?: string; locale?: Locale };
 
 function validate(
-  data: { company: string; contactPerson: string; email: string; country: string; message: string },
+  data: { company: string; contactPerson: string; email: string; country: string; message: string; consent: boolean },
   v: Translations['common']
 ): FieldErrors {
   const errors: FieldErrors = {};
@@ -21,10 +23,11 @@ function validate(
   else if (!EMAIL_REGEX.test(data.email.trim())) errors.email = v.validationEmail;
   if (!data.country.trim()) errors.country = v.validationCountry;
   if (!data.message.trim()) errors.message = v.validationMessage;
+  if (!data.consent) errors.consent = v.validationConsent;
   return errors;
 }
 
-export function ContactForm({ translations: t, initialProductName = '' }: Props) {
+export function ContactForm({ translations: t, initialProductName = '', locale = 'ru' }: Props) {
   const [company, setCompany] = useState('');
   const [contactPerson, setContactPerson] = useState('');
   const [email, setEmail] = useState('');
@@ -33,6 +36,7 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
   const [productName, setProductName] = useState(initialProductName);
   const [quantity, setQuantity] = useState('');
   const [message, setMessage] = useState('');
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -55,6 +59,7 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
       email: email.trim(),
       country: country.trim(),
       message: message.trim(),
+      consent,
     };
     const nextErrors = validate(data, common);
     if (Object.keys(nextErrors).length > 0) {
@@ -90,6 +95,7 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
         setProductName('');
         setQuantity('');
         setMessage('');
+        setConsent(false);
       } else {
         setStatus('error');
       }
@@ -207,6 +213,26 @@ export function ContactForm({ translations: t, initialProductName = '' }: Props)
           aria-invalid={!!errors.message}
         />
         {errors.message && <p className="mt-0.5 text-xs text-red-600">{errors.message}</p>}
+      </div>
+
+      <div>
+        <label className="flex items-start gap-2.5 cursor-pointer text-sm text-brand-black">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => { setConsent(e.target.checked); setErrors((prev) => ({ ...prev, consent: undefined })); }}
+            className="mt-0.5 h-4 w-4 rounded border-gray-medium/30 text-primary focus:ring-primary"
+            aria-invalid={!!errors.consent}
+          />
+          <span>
+            {common.consentLabelStart}
+            <Link href={`/${locale}/privacy`} className="text-primary hover:text-accent-red underline">
+              {common.consentLabelLink}
+            </Link>
+            {common.consentLabelEnd}
+          </span>
+        </label>
+        {errors.consent && <p className="mt-0.5 text-xs text-red-600">{errors.consent}</p>}
       </div>
 
       <div className="pt-1">

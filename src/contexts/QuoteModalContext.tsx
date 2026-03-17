@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Translations } from '@/lib/i18n/translations';
 import { CountrySelect } from '@/components/CountrySelect';
@@ -34,10 +35,10 @@ type ProviderProps = {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type FieldErrors = Partial<Record<'company' | 'contactPerson' | 'email' | 'country' | 'message', string>>;
+type FieldErrors = Partial<Record<'company' | 'contactPerson' | 'email' | 'country' | 'message' | 'consent', string>>;
 
 function validate(
-  data: { company: string; contactPerson: string; email: string; country: string; message: string },
+  data: { company: string; contactPerson: string; email: string; country: string; message: string; consent: boolean },
   v: Translations['common']
 ): FieldErrors {
   const errors: FieldErrors = {};
@@ -47,11 +48,12 @@ function validate(
   else if (!EMAIL_REGEX.test(data.email.trim())) errors.email = v.validationEmail;
   if (!data.country.trim()) errors.country = v.validationCountry;
   if (!data.message.trim()) errors.message = v.validationMessage;
+  if (!data.consent) errors.consent = v.validationConsent;
   return errors;
 }
 
 function isValid(
-  data: { company: string; contactPerson: string; email: string; country: string; message: string },
+  data: { company: string; contactPerson: string; email: string; country: string; message: string; consent: boolean },
   v: Translations['common']
 ): boolean {
   return Object.keys(validate(data, v)).length === 0;
@@ -125,6 +127,7 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
   const [phone, setPhone] = useState('');
   const [country, setCountry] = useState('');
   const [message, setMessage] = useState('');
+  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'form' | 'success' | 'error'>('form');
@@ -135,7 +138,8 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
     email: email.trim(),
     country: country.trim(),
     message: message.trim(),
-  }), [company, contactPerson, email, country, message]);
+    consent,
+  }), [company, contactPerson, email, country, message, consent]);
 
   const valid = useMemo(() => isValid(formData, common), [formData, common]);
 
@@ -184,7 +188,7 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, common, phone, product, quantity, onClose]);
+  }, [formData, common, phone, product, quantity, consent, onClose]);
 
   if (status === 'success') {
     const successModal = (
@@ -338,6 +342,26 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
               aria-invalid={!!errors.message}
             />
             {errors.message && <p className="mt-0.5 text-xs text-red-600">{errors.message}</p>}
+          </div>
+
+          <div>
+            <label className="flex items-start gap-2.5 cursor-pointer text-sm text-brand-black">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => { setConsent(e.target.checked); clearError('consent'); }}
+                className="mt-0.5 h-4 w-4 rounded border-gray-medium/30 text-primary focus:ring-primary"
+                aria-invalid={!!errors.consent}
+              />
+              <span>
+                {common.consentLabelStart}
+                <Link href={`/${locale}/privacy`} className="text-primary hover:text-accent-red underline">
+                  {common.consentLabelLink}
+                </Link>
+                {common.consentLabelEnd}
+              </span>
+            </label>
+            {errors.consent && <p className="mt-0.5 text-xs text-red-600">{errors.consent}</p>}
           </div>
 
             <div className="flex flex-wrap gap-2 pt-2">
