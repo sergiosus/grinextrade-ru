@@ -88,15 +88,6 @@ export function Footer({ locale, translations }: Props) {
   return (
     <footer className="bg-primary text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Brand block — separate from column grid */}
-        <div className="mb-10">
-          <p className="font-bold text-lg">{f.company}</p>
-          <p className="mt-3 text-sm text-white/85 leading-[1.55] max-w-md">
-            {f.companyDesc1}{f.companyDesc2 ? ` ${f.companyDesc2}` : ''}
-          </p>
-        </div>
-
-        {/* One row of four equal columns — headers align */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
           {/* Column 1 — Company */}
           <div>
