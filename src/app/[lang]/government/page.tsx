@@ -1,6 +1,8 @@
 import type { Locale } from '@/lib/i18n/config';
 import { getTranslations } from '@/lib/i18n/translations';
 import { generateSeoMetadata } from '@/components/Seo';
+import { ContactForm } from '@/components/ContactForm';
+import { COMPANY } from '@/lib/company';
 
 type Props = { params: Promise<{ lang: Locale }> };
 
@@ -22,9 +24,7 @@ export default async function GovernmentPage({ params }: Props) {
   return (
     <div className="py-12 md:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-brand-black mb-6">
-          {t.government.title}
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-brand-black mb-6">{t.government.title}</h1>
         <p className="text-lg text-gray-medium mb-10">{t.government.intro}</p>
 
         <section className="bg-white border border-gray-light rounded-2xl shadow-sm p-6 md:p-8 mb-10">
@@ -61,13 +61,23 @@ export default async function GovernmentPage({ params }: Props) {
             <h2 className="text-xl font-semibold text-brand-black mb-4">{t.government.tenderContact}</h2>
             <p className="text-gray-medium">
               <a
-                href="mailto:tender@grinextrade.ru"
+                href={`mailto:${COMPANY.contacts.tenderEmail}`}
                 className="text-primary hover:text-accent-red hover:underline font-medium"
               >
-                tender@grinextrade.ru
+                {COMPANY.contacts.tenderEmail}
               </a>
             </p>
           </section>
+        </div>
+
+        <div className="mt-10 max-w-2xl mx-auto space-y-3 sm:space-y-4">
+          <div>
+            <h2 className="text-lg font-bold text-brand-black">{t.government.requestFormTitle}</h2>
+            <p className="mt-2 text-sm text-gray-medium">{t.government.requestFormHelper}</p>
+          </div>
+          <div className="rounded-2xl border border-gray-light p-4 sm:p-5 shadow-sm">
+            <ContactForm translations={t} locale={lang} initialProductName={t.government.requestFormProductName} />
+          </div>
         </div>
       </div>
     </div>

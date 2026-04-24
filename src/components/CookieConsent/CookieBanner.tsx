@@ -2,6 +2,7 @@
 
 type Props = {
   message: string;
+  ariaLabel: string;
   acceptAll: string;
   rejectNonEssential: string;
   managePreferences: string;
@@ -12,6 +13,7 @@ type Props = {
 
 export function CookieBanner({
   message,
+  ariaLabel,
   acceptAll,
   rejectNonEssential,
   managePreferences,
@@ -22,7 +24,7 @@ export function CookieBanner({
   return (
     <div
       role="dialog"
-      aria-label="Cookie consent"
+      aria-label={ariaLabel}
       className="fixed bottom-0 left-0 right-0 z-[200] safe-area-pb bg-white border-t border-gray-light shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">

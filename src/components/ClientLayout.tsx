@@ -6,7 +6,6 @@ import { QuoteModalProvider } from '@/contexts/QuoteModalContext';
 import { CookieConsentProvider } from '@/components/CookieConsent';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { FloatingButtons } from '@/components/FloatingButtons';
 import type { ReactNode } from 'react';
 
 type Props = {
@@ -22,7 +21,6 @@ export function ClientLayout({ children, locale, translations }: Props) {
         <Header locale={locale} translations={translations} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} translations={translations} />
-        <FloatingButtons />
       </QuoteModalProvider>
     </CookieConsentProvider>
   );

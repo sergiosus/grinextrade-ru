@@ -170,6 +170,7 @@ export function ContactForm({ translations: t, initialProductName = '', locale =
           value={country}
           onChange={(v) => { setCountry(v); setErrors((prev) => ({ ...prev, country: undefined })); }}
           placeholder={t.quoteModal.countryPlaceholder}
+          noMatchesLabel={t.quoteModal.countryNoMatches}
           className="w-full [&_input]:h-10 [&_input]:py-2 [&_input]:px-3 [&_input]:text-sm"
           hasError={!!errors.country}
         />

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { Locale } from '@/lib/i18n/config';
+import { COMPANY } from '@/lib/company';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://grinextrade.ru';
 const baseTitleRu = 'Grinex Trade – поставщик промышленной и текстильной продукции';
@@ -66,18 +67,18 @@ export function OrganizationJsonLd() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Grinex Trade',
+    name: COMPANY.brand,
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
     description: baseDescriptionRu,
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'info@grinextrade.ru',
-      telephone: '+7-912-447-54-19',
+      email: COMPANY.contacts.email,
+      telephone: COMPANY.contacts.phoneE164,
       contactType: 'customer service',
       areaServed: ['RU', 'KZ', 'UZ', 'KG', 'TJ', 'BY'],
     },
-    sameAs: ['https://t.me/grinextrade'],
+    sameAs: [COMPANY.contacts.telegramUrl],
   };
   return (
     <script

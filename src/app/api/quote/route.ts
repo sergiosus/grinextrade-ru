@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import { COMPANY } from '@/lib/company';
 
-const RECIPIENT = 'info@grinextrade.ru';
-const SUBJECT = 'New Quote Request — GrinexTrade';
+const RECIPIENT = COMPANY.contacts.email;
+const SUBJECT = `New Quote Request — ${COMPANY.brand}`;
 
 type QuoteBody = {
   companyName?: string;

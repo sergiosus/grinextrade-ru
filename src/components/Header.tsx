@@ -6,10 +6,11 @@ import type { Locale } from '@/lib/i18n/config';
 import { locales, localeNames, isRtl } from '@/lib/i18n/config';
 import type { Translations } from '@/lib/i18n/translations';
 import { useState, useRef, useEffect } from 'react';
+import { COMPANY } from '@/lib/company';
 
-const WHATSAPP_URL = 'https://wa.me/79124475419';
-const TELEGRAM_URL = 'https://t.me/grinextrade';
-const EMAIL = 'info@grinextrade.ru';
+const WHATSAPP_URL = COMPANY.contacts.whatsappUrl;
+const TELEGRAM_URL = COMPANY.contacts.telegramUrl;
+const EMAIL = COMPANY.contacts.email;
 
 const EMAIL_ICON = (
   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -209,7 +210,7 @@ export function Header({ locale, translations }: Props) {
               type="button"
               className="md:hidden p-2 rounded-lg text-brand-black hover:bg-gray-light"
               onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Menu"
+              aria-label={translations.header.mobileMenuAriaLabel}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {menuOpen ? (

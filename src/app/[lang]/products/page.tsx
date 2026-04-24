@@ -4,6 +4,7 @@ import { generateSeoMetadata } from '@/components/Seo';
 import { getProducts } from '@/lib/products';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductsCTA } from '@/components/ProductsCTA';
+import { ContactForm } from '@/components/ContactForm';
 import type { Translations } from '@/lib/i18n/translations';
 
 function getCategoryText(t: Translations, category: string): string {
@@ -64,6 +65,18 @@ export default async function ProductsPage({ params, searchParams }: Props) {
             <ProductsCTA label={t.products.requestQuote} />
           </>
         )}
+
+        <div className="mt-14 md:mt-16">
+          <div className="max-w-2xl mx-auto space-y-3 sm:space-y-4">
+            <div>
+              <h2 className="text-lg font-bold text-brand-black">{t.products.requestFormTitle}</h2>
+              <p className="mt-2 text-sm text-gray-medium">{t.products.requestFormHelper}</p>
+            </div>
+            <div className="rounded-2xl border border-gray-light p-4 sm:p-5 shadow-sm">
+              <ContactForm translations={t} locale={lang} initialProductName="" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

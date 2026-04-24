@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  type ReactNode,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
@@ -93,22 +85,7 @@ type ModalProps = {
 };
 
 function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProps) {
-  const t = useMemo(() => (translations as Translations & { quoteModal?: Record<string, string> }).quoteModal ?? {
-    title: locale === 'ru' ? 'Форма запроса' : 'Request Form',
-    companyName: 'Company name',
-    contactPerson: 'Contact person',
-    email: 'Email',
-    phone: 'Phone',
-    country: 'Country',
-    countryPlaceholder: 'Country',
-    productLabel: 'Product',
-    quantityLabel: 'Quantity',
-    message: 'Message',
-    close: 'Close',
-    sendRequest: 'Send Request',
-    successMessage: 'Thank you. Your request has been sent. We will contact you shortly.',
-    errorMessage: 'Failed to send request. Please try again later.',
-  }, [translations, locale]);
+  const t = translations.quoteModal;
   const common = translations.common;
 
   useEffect(() => {
@@ -304,6 +281,7 @@ function QuoteModal({ initialProduct, onClose, locale, translations }: ModalProp
               value={country}
               onChange={(v) => { setCountry(v); clearError('country'); }}
               placeholder={t.countryPlaceholder}
+              noMatchesLabel={translations.quoteModal.countryNoMatches}
               className="w-full [&_input]:h-10 [&_input]:py-2 [&_input]:px-3 [&_input]:text-sm"
               hasError={!!errors.country}
             />

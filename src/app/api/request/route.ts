@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
+import { COMPANY } from '@/lib/company';
 
-const RECIPIENT = 'info@grinextrade.ru';
+const RECIPIENT = COMPANY.contacts.email;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type RequestBody = {
@@ -59,9 +60,9 @@ function buildEmailText(body: RequestBody): string {
 }
 
 function getSubject(source: RequestBody['source']): string {
-  if (source === 'contact') return 'New Contact Request — GrinexTrade';
-  if (source === 'wheelset_request') return 'New WheelSet Request — GrinexTrade';
-  return 'New Product Quote Request — GrinexTrade';
+  if (source === 'contact') return `New Contact Request — ${COMPANY.brand}`;
+  if (source === 'wheelset_request') return `New WheelSet Request — ${COMPANY.brand}`;
+  return `New Product Quote Request — ${COMPANY.brand}`;
 }
 
 export async function POST(request: Request) {

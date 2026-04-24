@@ -7,12 +7,21 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  noMatchesLabel?: string;
   id?: string;
   className?: string;
   hasError?: boolean;
 };
 
-export function CountrySelect({ value, onChange, placeholder = 'Select or type country', id, className = '', hasError }: Props) {
+export function CountrySelect({
+  value,
+  onChange,
+  placeholder = 'Select or type country',
+  noMatchesLabel = 'No matches',
+  id,
+  className = '',
+  hasError,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [highlightIndex, setHighlightIndex] = useState(0);
@@ -99,7 +108,7 @@ export function CountrySelect({ value, onChange, placeholder = 'Select or type c
           className="absolute z-50 mt-1 w-full max-h-60 overflow-auto rounded-lg border border-gray-light bg-white shadow-lg py-1"
         >
           {slice.length === 0 ? (
-            <li className="px-4 py-2 text-gray-medium text-sm">No matches</li>
+            <li className="px-4 py-2 text-gray-medium text-sm">{noMatchesLabel}</li>
           ) : (
             slice.map((country, i) => (
               <li

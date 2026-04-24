@@ -56,6 +56,7 @@ export function CookieConsent({ locale, translations, modalOpen, setModalOpen }:
     <>
       {bannerVisible && (
         <CookieBanner
+          ariaLabel={t.bannerAriaLabel}
           message={t.bannerMessage}
           acceptAll={t.acceptAll}
           rejectNonEssential={t.rejectNonEssential}

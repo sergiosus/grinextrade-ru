@@ -14,73 +14,24 @@ import {
   resolveFitmentForDisplay,
 } from '@/data/wheelsetVehicles';
 
-const SEASON_OPTIONS = ['Лето', 'Зима', 'Всесезон'] as const;
-const STYLE_OPTIONS = ['OEM (штатный)', 'Спорт', 'Премиум', 'Бюджет', 'Off-road'] as const;
-
-const SEASON_OPTIONS_SORTED = [...SEASON_OPTIONS].sort((a, b) => a.localeCompare(b, 'ru', { sensitivity: 'base' }));
-const STYLE_OPTIONS_SORTED = [...STYLE_OPTIONS].sort((a, b) => a.localeCompare(b, 'ru', { sensitivity: 'base' }));
-
-const BUDGET_PRESETS: { value: string; label: string }[] = [
-  { value: '', label: 'Выберите вариант' },
-  { value: 'до40', label: 'До 40 000 ₽' },
-  { value: '40_60', label: '40–60 тыс ₽' },
-  { value: '60_90', label: '60–90 тыс ₽' },
-  { value: '90_130', label: '90–130 тыс ₽' },
-  { value: '130p', label: '130+ тыс ₽' },
-  { value: 'custom', label: 'Свой бюджет' },
-];
-
-const ACCESSORY_OPTIONS = [
-  'TPMS датчики',
-  'Секретки',
-  'Гайки / болты',
-  'Центровочные кольца',
-  'Колпачки',
-  'Не нужны',
-] as const;
-
-const ACCESSORY_OPTIONS_SORTED = [...ACCESSORY_OPTIONS].sort((a, b) => a.localeCompare(b, 'ru', { sensitivity: 'base' }));
-
-const FITMENT_DISCLAIMER =
-  'Параметры предварительные. Перед заказом мы проверим совместимость по VIN и комплектации.';
-
-const FITMENT_UNKNOWN_MSG = 'Параметры уточним по VIN и комплектации.';
-
-const FITMENT_GENERIC_FALLBACK_MSG =
-  'Предварительно: уточним по VIN. Можно указать текущий размер шин вручную.';
-
-function vehicleTypeLabelRu(v: 'sedan' | 'crossover' | 'suv' | 'pickup'): string {
-  switch (v) {
-    case 'sedan':
-      return 'Седан / легковой';
-    case 'crossover':
-      return 'Кроссовер';
-    case 'suv':
-      return 'SUV / внедорожник';
-    case 'pickup':
-      return 'Пикап';
-  }
-}
-
-const YEAR_FITMENT_INLINE_HINT =
-  'Выберите год выпуска, чтобы увидеть возможные параметры шин и дисков.';
+type VehicleType = 'sedan' | 'crossover' | 'suv' | 'pickup';
 
 function d(v: string) {
   const t = v.trim();
   return t || '—';
 }
 
-function resolveMake(brand: string, brandOther: string): string {
+function resolveMake(brand: string, brandOther: string, otherPrefix: string): string {
   if (isOtherBrand(brand)) {
     const o = brandOther.trim();
-    return o ? `Другое: ${o}` : 'Другое';
+    return o ? `${otherPrefix}: ${o}` : otherPrefix;
   }
   return brand.trim();
 }
 
-function resolveBudget(key: string, custom: string): string {
+function resolveBudget(key: string, custom: string, presets: { value: string; label: string }[]): string {
   if (key === 'custom') return d(custom);
-  const row = BUDGET_PRESETS.find((x) => x.value === key);
+  const row = presets.find((x) => x.value === key);
   if (!key || !row) return '—';
   return row.label;
 }
@@ -148,7 +99,20 @@ function FieldPairSpacer() {
 
 export function WheelSetForm({ locale, translations: t }: Props) {
   const common = t.common;
+  const ws = t.wheelsetForm;
   const brandNames = useMemo(() => getSortedBrandNames(), []);
+  const seasonOptionsSorted = useMemo(
+    () => [...ws.seasonOptions].sort((a, b) => a.localeCompare(b, locale, { sensitivity: 'base' })),
+    [ws.seasonOptions, locale]
+  );
+  const styleOptionsSorted = useMemo(
+    () => [...ws.styleOptions].sort((a, b) => a.localeCompare(b, locale, { sensitivity: 'base' })),
+    [ws.styleOptions, locale]
+  );
+  const accessoryOptionsSorted = useMemo(
+    () => [...ws.accessoryOptions].sort((a, b) => a.localeCompare(b, locale, { sensitivity: 'base' })),
+    [ws.accessoryOptions, locale]
+  );
 
   const [brand, setBrand] = useState('');
   const [brandOther, setBrandOther] = useState('');
@@ -209,8 +173,8 @@ export function WheelSetForm({ locale, translations: t }: Props) {
     return resolveFitmentForDisplay(brand, catalogModelName, yearNum);
   }, [canPickYear, yearNum, brand, catalogModelName]);
 
-  const makeResolved = useMemo(() => resolveMake(brand, brandOther), [brand, brandOther]);
-  const budgetLine = useMemo(() => resolveBudget(budgetKey, budgetCustom), [budgetKey, budgetCustom]);
+  const makeResolved = useMemo(() => resolveMake(brand, brandOther, ws.otherBrandPrefix), [brand, brandOther, ws.otherBrandPrefix]);
+  const budgetLine = useMemo(() => resolveBudget(budgetKey, budgetCustom, ws.budgetPresets), [budgetKey, budgetCustom, ws.budgetPresets]);
 
   const modelResolved = useMemo(() => {
     if (otherBrand) return modelOther.trim();
@@ -264,18 +228,19 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
   const companyNameLine = useMemo(() => `${makeResolved} ${modelResolved}`.trim(), [makeResolved, modelResolved]);
 
-  const toggleAccessory = useCallback((label: (typeof ACCESSORY_OPTIONS)[number]) => {
+  const toggleAccessory = useCallback((label: string) => {
     setAccessorySelection((prev) => {
-      if (label === 'Не нужны') {
-        return prev.includes('Не нужны') ? [] : ['Не нужны'];
+      const noneLabel = ws.accessoryOptions[ws.accessoryOptions.length - 1] ?? '—';
+      if (label === noneLabel) {
+        return prev.includes(noneLabel) ? [] : [noneLabel];
       }
-      const withoutNone = prev.filter((x) => x !== 'Не нужны');
+      const withoutNone = prev.filter((x) => x !== noneLabel);
       if (withoutNone.includes(label)) {
         return withoutNone.filter((x) => x !== label);
       }
       return [...withoutNone, label];
     });
-  }, []);
+  }, [ws.accessoryOptions]);
 
   const controlClass = (field: keyof FieldErrors) =>
     `h-11 w-full rounded-lg border px-3 text-base bg-white ${
@@ -294,21 +259,21 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
   function validate(): FieldErrors {
     const next: FieldErrors = {};
-    if (!brand.trim()) next.make = 'Укажите марку';
+    if (!brand.trim()) next.make = ws.validateMake;
     if (isOtherBrand(brand) && !brandOther.trim()) {
-      next.brandOther = 'Укажите марку';
+      next.brandOther = ws.validateMake;
     }
     if (isOtherBrand(brand)) {
-      if (!modelOther.trim()) next.model = 'Укажите модель';
+      if (!modelOther.trim()) next.model = ws.validateModel;
     } else {
-      if (!model.trim()) next.model = 'Укажите модель';
+      if (!model.trim()) next.model = ws.validateModel;
       if (isOtherModel(model) && !modelOther.trim()) {
-        next.modelOther = 'Укажите модель';
+        next.modelOther = ws.validateModel;
       }
     }
-    if (!year) next.year = 'Укажите год выпуска';
-    if (!phone.trim()) next.phone = 'Укажите телефон';
-    if (!city.trim()) next.city = 'Укажите город';
+    if (!year) next.year = ws.validateYear;
+    if (!phone.trim()) next.phone = ws.validatePhone;
+    if (!city.trim()) next.city = ws.validateCity;
     if (!consent) next.consent = common.validationConsent;
     return next;
   }
@@ -408,17 +373,17 @@ export function WheelSetForm({ locale, translations: t }: Props) {
       <div className={gridForm}>
         <div>
           <label className={labelCls} htmlFor="ws-brand">
-            Марка
+            {ws.selectBrand}
           </label>
           <select
             id="ws-brand"
             value={brand}
             onChange={(e) => onBrandChange(e.target.value)}
             className={controlClass('make')}
-            aria-label="Марка"
+            aria-label={ws.selectBrand}
             aria-invalid={!!errors.make}
           >
-            <option value="">Выберите марку</option>
+            <option value="">{ws.selectBrand}</option>
             {brandNames.map((b) => (
               <option key={b} value={b}>
                 {b}
@@ -433,7 +398,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         ) : (
           <div>
             <label className={labelCls} htmlFor="ws-model">
-              Модель
+              {ws.selectModel}
             </label>
             <select
               id="ws-model"
@@ -441,9 +406,9 @@ export function WheelSetForm({ locale, translations: t }: Props) {
               onChange={(e) => onModelChange(e.target.value)}
               disabled={!brand}
               className={`${controlClass('model')} ${!brand ? disabledPick : ''}`}
-              aria-label="Модель"
+              aria-label={ws.selectModel}
             >
-              <option value="">{!brand ? 'Сначала выберите марку' : 'Выберите модель'}</option>
+              <option value="">{!brand ? ws.brandFirstHint : ws.selectModel}</option>
               {models.map((name) => (
                 <option key={name} value={name}>
                   {name}
@@ -457,7 +422,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         {otherBrand && (
           <div className="md:col-span-2">
             <label className={labelCls} htmlFor="ws-brand-other">
-              Марка (текст)
+              {ws.enterBrand}
             </label>
             <input
               id="ws-brand-other"
@@ -467,7 +432,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
                 setBrandOther(e.target.value);
                 setErrors((prev) => ({ ...prev, brandOther: undefined }));
               }}
-              placeholder="Введите марку"
+              placeholder={ws.enterBrand}
               className={controlClass('brandOther')}
               aria-invalid={!!errors.brandOther}
             />
@@ -478,7 +443,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         {otherBrand && (
           <div className="md:col-span-2">
             <label className={labelCls} htmlFor="ws-model-free">
-              Модель (текст)
+              {ws.enterModel}
             </label>
             <input
               id="ws-model-free"
@@ -488,7 +453,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
                 setModelOther(e.target.value);
                 setErrors((prev) => ({ ...prev, model: undefined }));
               }}
-              placeholder="например: Sorento, Passat"
+              placeholder={ws.modelExamplePlaceholder}
               className={`${controlClass('model')} placeholder:text-gray-medium/60`}
               aria-invalid={!!errors.model}
             />
@@ -499,7 +464,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         {!otherBrand && isOtherModel(model) && (
           <div className="md:col-span-2">
             <label className={labelCls} htmlFor="ws-model-other">
-              Модель (текст)
+              {ws.enterModel}
             </label>
             <input
               id="ws-model-other"
@@ -509,7 +474,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
                 setModelOther(e.target.value);
                 setErrors((prev) => ({ ...prev, modelOther: undefined, model: undefined }));
               }}
-              placeholder="Введите модель"
+              placeholder={ws.enterModel}
               className={`${controlClass('modelOther')} placeholder:text-gray-medium/60`}
               aria-invalid={!!errors.modelOther}
             />
@@ -519,7 +484,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div>
           <label className={labelCls} htmlFor="ws-year">
-            Год выпуска
+            {ws.selectYear}
           </label>
           <select
             id="ws-year"
@@ -533,10 +498,10 @@ export function WheelSetForm({ locale, translations: t }: Props) {
             }}
             disabled={!canPickYear}
             className={`${controlClass('year')} ${!canPickYear ? disabledPick : ''}`}
-            aria-label="Год выпуска"
+            aria-label={ws.selectYear}
             aria-describedby={showYearInlineHint ? 'ws-year-fitment-hint' : undefined}
           >
-            <option value="">{!canPickYear ? 'Сначала выберите марку и модель' : 'Выберите год'}</option>
+            <option value="">{!canPickYear ? ws.brandModelFirstHint : ws.selectYear}</option>
             {YEAR_CHOICES.map((y) => (
               <option key={y} value={String(y)}>
                 {y}
@@ -545,7 +510,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
           </select>
           {showYearInlineHint ? (
             <p id="ws-year-fitment-hint" className="mt-1.5 text-xs text-gray-600">
-              {YEAR_FITMENT_INLINE_HINT}
+              {ws.yearInlineHint}
             </p>
           ) : null}
           {errors.year ? <p className="mt-1 text-xs text-red-600">{errors.year}</p> : null}
@@ -553,7 +518,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div>
           <label className={labelCls} htmlFor="ws-vin">
-            VIN (необязательно)
+            {ws.vinOptionalLabel}
           </label>
           <input
             id="ws-vin"
@@ -564,12 +529,11 @@ export function WheelSetForm({ locale, translations: t }: Props) {
             maxLength={17}
             autoComplete="off"
             inputMode="text"
-            placeholder="17 знаков, если удобно указать"
+            placeholder={ws.vinPlaceholder}
             aria-describedby="ws-vin-hint"
           />
           <p id="ws-vin-hint" className="mt-1 text-xs text-gray-500">
-            Поле по желанию. Марка, модель и год выбираются вручную. Указанный VIN передаётся в заявке для
-            уточнения комплектации менеджером; автоматического разбора VIN на сайте нет.
+            {ws.vinHint}
           </p>
         </div>
 
@@ -577,16 +541,18 @@ export function WheelSetForm({ locale, translations: t }: Props) {
           <div className="md:col-span-2">
             {fitmentDisplay.kind === 'none' ? (
               <div className="rounded-lg border border-gray-medium/30 bg-white p-3 text-sm text-gray-800 shadow-sm">
-                {FITMENT_UNKNOWN_MSG}
+                {ws.fitmentUnknownMsg}
               </div>
             ) : fitmentDisplay.kind === 'generic' ? (
               <div className="rounded-lg border border-primary/25 bg-primary/5 p-4 text-sm text-brand-black">
-                <p className="text-base font-semibold text-primary">Предварительные диапазоны</p>
+                <p className="text-base font-semibold text-primary">{ws.fitmentCardGenericTitle}</p>
                 <div className="mt-3 flex flex-col gap-3">
-                  <p className="text-sm text-gray-800">{FITMENT_GENERIC_FALLBACK_MSG}</p>
-                  <p className="text-xs text-gray-600">Тип авто: {vehicleTypeLabelRu(fitmentDisplay.hint.vehicleType)}</p>
-                  <p className="text-xs text-gray-600">Диаметр дисков (обычно): {fitmentDisplay.hint.rimDiameters}</p>
-                  <p className="text-xs text-gray-600">Шины (примеры):</p>
+                  <p className="text-sm text-gray-800">{ws.fitmentGenericMsg}</p>
+                  <p className="text-xs text-gray-600">
+                    {ws.vehicleTypeLabels[fitmentDisplay.hint.vehicleType as VehicleType]}
+                  </p>
+                  <p className="text-xs text-gray-600">{fitmentDisplay.hint.rimDiameters}</p>
+                  <p className="text-xs text-gray-600">{ws.tiresExamplesLabel}:</p>
                   <div className="flex flex-wrap gap-1.5">
                     {fitmentDisplay.hint.tiresExamples.map((tt) => (
                       <span
@@ -602,11 +568,13 @@ export function WheelSetForm({ locale, translations: t }: Props) {
             ) : (
               <div className="rounded-lg border border-primary/25 bg-primary/5 p-4 text-sm text-brand-black">
                 <p className="text-base font-semibold text-primary">
-                  {fitmentDisplay.kind === 'model' ? 'Предварительные параметры по модели' : 'Возможные параметры'}
+                  {fitmentDisplay.kind === 'model' ? ws.fitmentCardModelTitle : ws.fitmentCardExactTitle}
                 </p>
                 <div className="mt-3 flex flex-col gap-3">
-                  <p className="text-xs text-gray-600">Период в каталоге: {fitmentDisplay.sample.yearRange}</p>
-                  <p className="text-xs text-gray-600">Шины (примеры):</p>
+                  <p className="text-xs text-gray-600">
+                    {ws.catalogPeriodLabel}: {fitmentDisplay.sample.yearRange}
+                  </p>
+                  <p className="text-xs text-gray-600">{ws.tiresExamplesLabel}:</p>
                   <div className="flex flex-wrap gap-1.5">
                     {fitmentDisplay.sample.tires.map((tt) => (
                       <span
@@ -617,20 +585,26 @@ export function WheelSetForm({ locale, translations: t }: Props) {
                       </span>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-600">Диски:</p>
+                  <p className="text-xs text-gray-600">{ws.wheelsLabel}:</p>
                   <ul className="list-disc pl-4 text-sm text-brand-black">
-                    <li>PCD: {fitmentDisplay.sample.wheels[0]}</li>
-                    <li>ET: {fitmentDisplay.sample.wheels[1]}</li>
-                    <li>DIA: {fitmentDisplay.sample.wheels[2]}</li>
+                    <li>
+                      {ws.wheelsPcdLabel}: {fitmentDisplay.sample.wheels[0]}
+                    </li>
+                    <li>
+                      {ws.wheelsEtLabel}: {fitmentDisplay.sample.wheels[1]}
+                    </li>
+                    <li>
+                      {ws.wheelsDiaLabel}: {fitmentDisplay.sample.wheels[2]}
+                    </li>
                   </ul>
                   <button
                     type="button"
                     onClick={applyCatalogFitment}
                     className="h-11 w-full rounded-lg border border-primary bg-white px-3 text-sm font-medium text-primary hover:bg-primary/10 sm:w-auto"
                   >
-                    Заполнить из подсказки
+                    {ws.applyHintButton}
                   </button>
-                  <p className="border-t border-primary/15 pt-3 text-xs text-gray-600">{FITMENT_DISCLAIMER}</p>
+                  <p className="border-t border-primary/15 pt-3 text-xs text-gray-600">{ws.fitmentDisclaimer}</p>
                 </div>
               </div>
             )}
@@ -639,7 +613,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div>
           <label className={labelCls} htmlFor="ws-tire">
-            Размер шин (можно изменить вручную)
+            {ws.tireSizeLabel}
           </label>
           <input
             id="ws-tire"
@@ -649,13 +623,13 @@ export function WheelSetForm({ locale, translations: t }: Props) {
               setTireSize(e.target.value);
               setAppliedCatalogSuggestions(false);
             }}
-            placeholder="например: 225/45 R18"
+            placeholder={ws.tireSizePlaceholder}
             className={`${neutralNoErr} placeholder:text-gray-medium/60`}
           />
         </div>
         <div>
           <label className={labelCls} htmlFor="ws-wheel">
-            Параметры дисков (можно изменить вручную)
+            {ws.wheelParamsLabel}
           </label>
           <input
             id="ws-wheel"
@@ -665,14 +639,14 @@ export function WheelSetForm({ locale, translations: t }: Props) {
               setWheelParams(e.target.value);
               setAppliedCatalogSuggestions(false);
             }}
-            placeholder="например: 5x114.3, ET 40, DIA 60.1"
+            placeholder={ws.wheelParamsPlaceholder}
             className={`${neutralNoErr} placeholder:text-gray-medium/60`}
           />
         </div>
 
         <div>
           <label className={labelCls} htmlFor="ws-budget">
-            Бюджет
+            {ws.budgetLabel}
           </label>
           <select
             id="ws-budget"
@@ -682,9 +656,9 @@ export function WheelSetForm({ locale, translations: t }: Props) {
               if (e.target.value !== 'custom') setBudgetCustom('');
             }}
             className={neutralNoErr}
-            aria-label="Бюджет"
+            aria-label={ws.budgetLabel}
           >
-            {BUDGET_PRESETS.map((o) => (
+            {ws.budgetPresets.map((o) => (
               <option key={o.value || 'empty'} value={o.value}>
                 {o.label}
               </option>
@@ -693,17 +667,17 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         </div>
         <div>
           <label className={labelCls} htmlFor="ws-season">
-            Сезон
+            {ws.seasonLabel}
           </label>
           <select
             id="ws-season"
             value={season}
             onChange={(e) => setSeason(e.target.value)}
             className={neutralNoErr}
-            aria-label="Сезон"
+            aria-label={ws.seasonLabel}
           >
-            <option value="">Выберите сезон</option>
-            {SEASON_OPTIONS_SORTED.map((opt) => (
+            <option value="">{ws.seasonLabel}</option>
+            {seasonOptionsSorted.map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -714,14 +688,14 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         {budgetKey === 'custom' && (
           <div className="md:col-span-2">
             <label className={labelCls} htmlFor="ws-budget-custom">
-              Свой бюджет
+              {ws.budgetPresets.find((x) => x.value === 'custom')?.label ?? ws.budgetLabel}
             </label>
             <input
               id="ws-budget-custom"
               type="text"
               value={budgetCustom}
               onChange={(e) => setBudgetCustom(e.target.value)}
-              placeholder="например: до 80 000 ₽"
+              placeholder={ws.budgetCustomPlaceholder}
               className={`${neutralNoErr} placeholder:text-gray-medium/60`}
             />
           </div>
@@ -729,17 +703,17 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div>
           <label className={labelCls} htmlFor="ws-style">
-            Стиль
+            {ws.styleLabel}
           </label>
           <select
             id="ws-style"
             value={style}
             onChange={(e) => setStyle(e.target.value)}
             className={neutralNoErr}
-            aria-label="Стиль"
+            aria-label={ws.styleLabel}
           >
-            <option value="">Выберите стиль</option>
-            {STYLE_OPTIONS_SORTED.map((opt) => (
+            <option value="">{ws.styleLabel}</option>
+            {styleOptionsSorted.map((opt) => (
               <option key={opt} value={opt}>
                 {opt}
               </option>
@@ -749,13 +723,12 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         <FieldPairSpacer />
 
         <div className="md:col-span-2">
-          <p className={labelCls}>Аксессуары</p>
+          <p className={labelCls}>{ws.accessoriesLabel}</p>
           <div className="grid grid-cols-2 gap-3 rounded-lg border border-gray-medium/30 bg-white p-3 md:grid-cols-3">
-            {ACCESSORY_OPTIONS_SORTED.map((opt) => {
+            {accessoryOptionsSorted.map((opt) => {
+              const noneLabel = ws.accessoryOptions[ws.accessoryOptions.length - 1] ?? '—';
               const checked =
-                opt === 'Не нужны'
-                  ? accessorySelection.includes('Не нужны')
-                  : accessorySelection.includes(opt) && !accessorySelection.includes('Не нужны');
+                opt === noneLabel ? accessorySelection.includes(noneLabel) : accessorySelection.includes(opt) && !accessorySelection.includes(noneLabel);
               return (
                 <label
                   key={opt}
@@ -776,7 +749,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div>
           <label className={labelCls} htmlFor="ws-city">
-            Город доставки
+            {ws.cityLabel}
           </label>
           <input
             id="ws-city"
@@ -786,7 +759,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
               setCity(e.target.value);
               setErrors((prev) => ({ ...prev, city: undefined }));
             }}
-            placeholder="город доставки"
+            placeholder={ws.cityPlaceholder}
             className={`${controlClass('city')} placeholder:text-gray-medium/60`}
             aria-invalid={!!errors.city}
           />
@@ -794,7 +767,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
         </div>
         <div>
           <label className={labelCls} htmlFor="ws-phone">
-            Телефон
+            {ws.phoneLabel}
           </label>
           <input
             id="ws-phone"
@@ -814,7 +787,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
 
         <div className="md:col-span-2">
           <label className={labelCls} htmlFor="ws-comment">
-            Комментарий
+            {ws.commentLabel}
           </label>
           <textarea
             id="ws-comment"
@@ -855,7 +828,7 @@ export function WheelSetForm({ locale, translations: t }: Props) {
           disabled={isSubmitting}
           className="h-11 w-full rounded-lg bg-primary px-4 text-sm font-semibold text-white transition hover:bg-accent-red disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
         >
-          {isSubmitting ? common.submitting : 'Отправить'}
+          {isSubmitting ? common.submitting : ws.submitButton}
         </button>
       </div>
     </form>

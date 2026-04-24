@@ -1,11 +1,13 @@
 import type { Locale } from '@/lib/i18n/config';
 import { getTranslations } from '@/lib/i18n/translations';
 import { generateSeoMetadata } from '@/components/Seo';
-import { ContactForm } from '@/components/ContactForm';
+import Link from 'next/link';
+import { COMPANY } from '@/lib/company';
 
-const WHATSAPP_URL = 'https://wa.me/79124475419';
-const TELEGRAM_URL = 'https://t.me/grinextrade';
-const EMAIL = 'info@grinextrade.ru';
+const WHATSAPP_URL = COMPANY.contacts.whatsappUrl;
+const TELEGRAM_URL = COMPANY.contacts.telegramUrl;
+const EMAIL = COMPANY.contacts.email;
+// Phone shown as plain text (not clickable), per UI requirement.
 
 const EMAIL_ICON = (
   <svg className="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -74,54 +76,120 @@ export default async function ContactPage({ params }: Props) {
   const t = getTranslations(lang);
 
   return (
-    <div className="relative py-12 md:py-16 overflow-hidden min-h-[80vh]">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/images/contact.jpg')" }}
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-primary/60" aria-hidden />
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 drop-shadow-lg">
-          {t.contact.title}
-        </h1>
-        <p className="text-white/90 mb-10 drop-shadow-md">{t.contact.subtitle}</p>
+    <div className="py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* 1) Hero */}
+        <section className="mx-auto max-w-3xl text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-black">{t.contact.title}</h1>
+          <p className="mt-3 text-sm text-gray-medium md:text-base">{t.contact.heroSubtitle}</p>
 
-        <div className="flex flex-wrap justify-center gap-6 mb-10">
-          <a
-            href={`mailto:${EMAIL}`}
-            className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white text-brand-black font-medium rounded-2xl hover:bg-gray-light shadow-lg transition"
-            aria-label={t.contact.emailBtn}
-            title={t.contact.emailBtn}
-          >
-            {EMAIL_ICON}
-          </a>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] text-white font-medium rounded-2xl hover:opacity-90 shadow-lg transition"
-            aria-label={t.contact.whatsapp}
-            title={t.contact.whatsapp}
-          >
-            {WHATSAPP_ICON}
-          </a>
-          <a
-            href={TELEGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#0088cc] text-white font-medium rounded-2xl hover:opacity-90 shadow-lg transition"
-            aria-label={t.contact.telegram}
-            title={t.contact.telegram}
-          >
-            {TELEGRAM_ICON}
-          </a>
-        </div>
+          <div className="mt-8 mx-auto w-full max-w-md rounded-2xl border border-gray-medium/20 bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-center gap-3">
+              <a
+                href={`mailto:${EMAIL}`}
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-gray-medium/20 bg-white text-brand-black shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                aria-label={t.contact.emailBtn}
+              >
+                <span className="inline-flex h-6 w-6 items-center justify-center">{EMAIL_ICON}</span>
+              </a>
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#25D366] text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                aria-label="WhatsApp"
+              >
+                {WHATSAPP_ICON}
+              </a>
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0088cc] text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                aria-label="Telegram"
+              >
+                {TELEGRAM_ICON}
+              </a>
+            </div>
 
-        <div className="bg-white/95 backdrop-blur rounded-xl p-4 md:p-5 shadow-lg scroll-mt-24" id="contact-form">
-          <h2 className="text-lg font-semibold text-brand-black mb-3">{t.contact.formTitle}</h2>
-          <ContactForm translations={t} locale={lang} />
-        </div>
+            <div className="mt-4 text-center text-sm font-semibold text-brand-black">
+              {lang === 'ru' ? 'МАКС' : 'MAX'}: {COMPANY.contacts.phoneDisplay}
+            </div>
+          </div>
+
+          {/* CTA removed by request */}
+        </section>
+
+        {/* 2) Quick actions */}
+        <section className="mt-14 md:mt-16">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="text-xl md:text-2xl font-bold text-brand-black text-center">{t.contact.quickActionsTitle}</h2>
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {t.contact.quickActions.map((c) => {
+                const href =
+                  c.key === 'orders'
+                    ? `/${lang}/admin`
+                    : c.key === 'suppliers'
+                      ? `mailto:${EMAIL}?subject=${encodeURIComponent('Supplier onboarding')}`
+                      : TELEGRAM_URL;
+                const external = href.startsWith('http') || href.startsWith('mailto:');
+                const Card = (
+                  <div className="group rounded-2xl border border-gray-medium/20 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
+                    <p className="text-base font-semibold text-brand-black group-hover:text-primary transition">{c.title}</p>
+                    <p className="mt-2 text-sm text-gray-medium">{c.text}</p>
+                    <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                      <span className="underline decoration-primary/30 decoration-2 underline-offset-2 group-hover:text-accent-red group-hover:decoration-accent-red transition">
+                        {c.action}
+                      </span>
+                    </p>
+                  </div>
+                );
+                return external ? (
+                  <a
+                    key={c.key}
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="block"
+                  >
+                    {Card}
+                  </a>
+                ) : (
+                  <Link key={c.key} href={href} className="block">
+                    {Card}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* 3) Legal / company info */}
+        <section className="mt-14 md:mt-16">
+          <div className="mx-auto max-w-5xl rounded-2xl border border-gray-medium/20 bg-slate-50/80 p-6 md:p-8">
+            <h2 className="text-sm font-semibold text-brand-black">{t.contact.legalTitle}</h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+              {t.contact.legalSections.map((s) => (
+                <div key={s.key} className="text-sm">
+                  <p className="font-semibold text-brand-black">{s.title}</p>
+                  <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-gray-medium">
+                    {s.lines.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <div className="text-sm">
+                <p className="font-semibold text-brand-black">{t.contact.infoTitle}</p>
+                <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-gray-medium">
+                  {t.contact.infoBullets.map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
