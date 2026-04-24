@@ -2,19 +2,27 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from '@/lib/i18n/config';
 
-const localePathRegex = /^\/(ru|en|kz|uz|kg|tj)(\/|$)/;
+const localePathRegex = /^\/(ru|en)(\/|$)/;
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip static files and api
+  // Skip static files, api, admin, and unlocalized app routes
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.includes('.') ||
-    pathname.startsWith('/admin')
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/dashboard')
   ) {
     return NextResponse.next();
+  }
+
+  // Old locale URLs → default (ru), preserve path
+  const legacy = pathname.match(/^\/(kz|uz|kg|tj)(\/.*)?$/);
+  if (legacy) {
+    const rest = legacy[2] ?? '/';
+    return NextResponse.redirect(new URL(`/${defaultLocale}${rest}`, request.url));
   }
 
   const hasLocale = localePathRegex.test(pathname);

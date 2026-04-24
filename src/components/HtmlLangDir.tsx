@@ -7,10 +7,6 @@ import { isRtl } from '@/lib/i18n/config';
 const localeToHtmlLang: Record<Locale, string> = {
   ru: 'ru',
   en: 'en',
-  kz: 'kk',
-  uz: 'uz',
-  kg: 'ky',
-  tj: 'tg',
 };
 
 type Props = { locale: Locale };

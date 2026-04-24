@@ -20,10 +20,6 @@ type Props = {
 const localeAlternates: Record<Locale, string> = {
   ru: 'ru_RU',
   en: 'en_US',
-  kz: 'kk_KZ',
-  uz: 'uz_UZ',
-  kg: 'ky_KG',
-  tj: 'tg_TJ',
 };
 
 function getBaseTitle(locale: Locale): string {

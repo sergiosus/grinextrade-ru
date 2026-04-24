@@ -63,10 +63,20 @@ const TELEGRAM_ICON = (
 const TOP_ICON_CLASS =
   'inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-white/40';
 
-const navLinks: (keyof Translations['nav'])[] = ['home', 'products', 'government', 'about', 'contact'];
+const navLinks: (keyof Translations['nav'])[] = [
+  'home',
+  'products',
+  'partbridge',
+  'wheelset',
+  'government',
+  'about',
+  'contact',
+];
 const pathByNav: Record<string, string> = {
   home: '',
   products: 'products',
+  partbridge: 'partbridge',
+  wheelset: 'wheelset',
   government: 'government',
   about: 'about',
   contact: 'contact',

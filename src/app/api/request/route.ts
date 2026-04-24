@@ -4,7 +4,7 @@ const RECIPIENT = 'info@grinextrade.ru';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type RequestBody = {
-  source?: 'contact' | 'product';
+  source?: 'contact' | 'product' | 'wheelset_request';
   companyName?: string;
   contactPerson?: string;
   email?: string;
@@ -17,23 +17,38 @@ type RequestBody = {
 };
 
 function validate(body: RequestBody): string | null {
+  if (body.source === 'wheelset_request') {
+    if (!body.companyName?.trim()) return 'Company name is required';
+    if (!body.contactPerson?.trim()) return 'Phone is required';
+    if (!body.phone?.trim()) return 'Phone is required';
+    if (!body.country?.trim()) return 'Country is required';
+    if (!body.message?.trim()) return 'Message is required';
+    if (body.email?.trim() && !EMAIL_REGEX.test(body.email.trim())) return 'Invalid email';
+    return null;
+  }
+
   if (!body.companyName?.trim()) return 'Company name is required';
   if (!body.contactPerson?.trim()) return 'Contact person is required';
   if (!body.email?.trim()) return 'Email is required';
   if (!EMAIL_REGEX.test(body.email.trim())) return 'Invalid email';
   if (!body.country?.trim()) return 'Country is required';
   if (!body.message?.trim()) return 'Message is required';
-  if (body.source && !['contact', 'product'].includes(body.source)) return 'Invalid source';
+  if (body.source && !['contact', 'product', 'wheelset_request'].includes(body.source)) return 'Invalid source';
   return null;
 }
 
 function buildEmailText(body: RequestBody): string {
-  const sourceLabel = body.source === 'contact' ? 'Contact page' : 'Product request';
+  const sourceLabel =
+    body.source === 'contact'
+      ? 'Contact page'
+      : body.source === 'wheelset_request'
+        ? 'WheelSet (wheels) request'
+        : 'Product request';
   return [
     'Source form: ' + sourceLabel,
     'Company name: ' + (body.companyName ?? '—'),
     'Contact person: ' + (body.contactPerson ?? '—'),
-    'Email: ' + (body.email ?? '—'),
+    'Email: ' + (body.email?.trim() || '—'),
     'Phone: ' + (body.phone ?? '—'),
     'Country: ' + (body.country ?? '—'),
     'Product: ' + (body.productName ?? '—'),
@@ -45,6 +60,7 @@ function buildEmailText(body: RequestBody): string {
 
 function getSubject(source: RequestBody['source']): string {
   if (source === 'contact') return 'New Contact Request — GrinexTrade';
+  if (source === 'wheelset_request') return 'New WheelSet Request — GrinexTrade';
   return 'New Product Quote Request — GrinexTrade';
 }
 

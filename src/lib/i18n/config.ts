@@ -1,15 +1,11 @@
-export const locales = ['ru', 'en', 'kz', 'uz', 'kg', 'tj'] as const;
+export const locales = ['ru', 'en'] as const;
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = 'ru';
 
 export const localeNames: Record<Locale, string> = {
-  ru: 'Русский',
-  en: 'English',
-  kz: 'Қазақша',
-  uz: 'Oʻzbekcha',
-  kg: 'Кыргызча',
-  tj: 'Тоҷикӣ',
+  ru: 'Русский (ru)',
+  en: 'English (en)',
 };
 
 export const rtlLocales: Locale[] = [];
@@ -24,17 +20,6 @@ export const browserLocaleMap: Record<string, Locale> = {
   'en-GB': 'en',
   ru: 'ru',
   'ru-RU': 'ru',
-  kz: 'kz',
-  'kk-KZ': 'kz',
-  'kk': 'kz',
-  uz: 'uz',
-  'uz-UZ': 'uz',
-  kg: 'kg',
-  'ky-KG': 'kg',
-  'ky': 'kg',
-  tj: 'tj',
-  'tg-TJ': 'tj',
-  'tg': 'tj',
 };
 
 export function getLocaleFromBrowser(acceptLanguage: string | null): Locale {
